@@ -1,12 +1,11 @@
 {
   "name": "kick-it",
   "version": "1.0.0",
-  "description": "> Pithy project description",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/index.js",
-    "watch": "webpack --watch --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "webpack -d --watch"
   },
   "repository": {
     "type": "git",
@@ -32,7 +31,13 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
     "eslint": "^4.11.0",
-    "nodemon": "^1.12.1"
+    "pg": "^7.4.0",
+    "express": "^4.16.2",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.12.1",
+    "request": "^2.83.0"
   }
 }
