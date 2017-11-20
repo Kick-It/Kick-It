@@ -13,14 +13,12 @@ const EventEntry = (props) => {
 
 
 	return (
-		<div>
+		<div className="card">
 			<a href={props.event.url}>
-				<div className="eventImage">
-					<img className="image" src={imageUrl}/>
-				</div>
-				<div className="eventBody">
+				<img className="card-img-top" src={imageUrl}/>
+				<div className="card-body">
 					<time className="eventTime">{props.event.start.local}</time>
-					<div className="eventTitle">{props.event.name.text}</div>
+					<div className="card-itle">{props.event.name.text}</div>
 					<div className="eventLocation"></div>
 					<div className="event">{props.event.is_free ? 'Free' : 'FEE'}</div>
 					<div className="eventCategory">{getCategory(props.event.category_id)}</div>

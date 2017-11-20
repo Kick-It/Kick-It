@@ -13,7 +13,7 @@ class EventListContainer extends React.Component {
 			rows.push(<EventEntry event={event} key={index} />);
 		});
 		return (
-			<div>
+			<div className="card-columns">
 				{rows}
 			</div>
 		)
