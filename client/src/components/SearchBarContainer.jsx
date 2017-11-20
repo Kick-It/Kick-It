@@ -10,11 +10,11 @@ class SearchBarContainer extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<form className="container">
 				<DateSearch />
 				<CategorySearch />
 				<PriceSearch />
-			</div>
+			</form>
 		)
 	}
 }
