@@ -1,3 +1,3 @@
 module.exports = {
-	API_key: 'TOKEN'
+	API_key: 'Bearer DRJSTEGUKULYO4VVSHJJ'
 }
