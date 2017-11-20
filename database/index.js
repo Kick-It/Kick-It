@@ -2,7 +2,10 @@
 let pg = require('pg')
 const knex = require('knex')({
   client: 'pg',
-  connection: process.env.DATABASE_URL || 'postgres://localhost:5432/events'
+  connection: {
+    host: '127.0.0.1',
+    database: 'Kick-It'
+  }
 })
 const bookshelf = require('bookshelf')(knex)
 const _ = require('lodash')
@@ -94,19 +97,19 @@ class Event extends bookshelf.Model {
 //==========================================================================================
 
 //create categories table
-let categoriesTable = client.query((/* add query */));
+// let categoriesTable = client.query((/* add query */));
 
-// add to categories table 
-let addToCategories = client.query (/* add query */ (err, res) => {
-  if (err) {
-    return err;
-  } else {
-  	return () => client.end();
-  }
-});
+// // add to categories table 
+// let addToCategories = client.query (/* add query */ (err, res) => {
+//   if (err) {
+//     return err;
+//   } else {
+//   	return () => client.end();
+//   }
+// });
 
-//search categories table
-let searchCategories = client.query((/* add query */));
+// //search categories table
+// let searchCategories = client.query((/* add query */));
 
 
 //==========================================================================================
@@ -114,19 +117,19 @@ let searchCategories = client.query((/* add query */));
 //==========================================================================================
 
 // create join events and categories table
-let venues_Table = client.query((/* add query */));
+// let venues_Table = client.query((/* add query */));
 
-// add to categories_events table 
-let addToVenues_Events = client.query (/* add query */ (err, res) => {
-  if (err) {
-    return err;
-  } else {
-    return () => client.end();
-  }
-});
+// // add to categories_events table 
+// let addToVenues_Events = client.query (/* add query */ (err, res) => {
+//   if (err) {
+//     return err;
+//   } else {
+//     return () => client.end();
+//   }
+// });
 
-//search categories_events table
-let searchVenues_Events = client.query((/* add query */));
+// //search categories_events table
+// let searchVenues_Events = client.query((/* add query */));
 
 
 //==========================================================================================
@@ -135,10 +138,10 @@ let searchVenues_Events = client.query((/* add query */));
 
 module.exports.addEvents = addEvents;
 module.exports.searchAllEvents = searchAllEvents;
-module.exports.addToCategories = addToCategories;
-module.exports.searchCategories = searchCategories;
-module.exports.addToCategories_Events = addToCategories_Events;
-module.exports.searchCategories_Events = searchCategories_Events;
+// module.exports.addToCategories = addToCategories;
+// module.exports.searchCategories = searchCategories;
+// module.exports.addToCategories_Events = addToCategories_Events;
+// module.exports.searchCategories_Events = searchCategories_Events;
 
 
 
