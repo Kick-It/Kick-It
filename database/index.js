@@ -26,7 +26,7 @@ let addToEvents = client.query (/* add query */ (err, res) => {
   } else {
   	return () => client.end();
   }
-});
+}); 
 
 // search event table 
 let searchEvents = client.query((/* add query */));
