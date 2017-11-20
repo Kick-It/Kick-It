@@ -1,5 +1,3 @@
-//jshint esversion:6
-
 // pg allows node to use postgres
 let pg = require('pg')
 const knex = require('knex')({
