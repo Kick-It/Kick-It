@@ -7,7 +7,7 @@ const getEvents = require('../lib/eventbrite.js');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/../react-client/dist'));
+app.use(express.static(__dirname + '/../client/dist'));
 
 app.get('/loadMonth', function (req, res) {
   console.log('A GET request was submitted on load');
