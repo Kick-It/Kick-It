@@ -14,7 +14,9 @@ class App extends React.Component {
 			<div>
 				<h1>Kick It</h1>
 				<SearchBarContainer />
-				<EventListContainer />
+				<div className="album text-muted">
+					<EventListContainer />
+				</div>
 				<WeekendListContainer />
 			</div>
 		)
