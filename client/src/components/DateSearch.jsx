@@ -2,7 +2,9 @@ import React from 'react';
 
 const DateSearch = (props) => {
 	return (
-		<input type="date" data-date-inline-picker="true" />
+		<div className="col">
+			<input type="date" data-date-inline-picker="true" />
+		</div>
 	);
 };
 
