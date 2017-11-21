@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const https = require("https");
 const getEvents = require('../lib/eventbrite.js');
+const db = require('../database/index.js')
 
 const app = express();
 
