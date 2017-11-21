@@ -7,6 +7,34 @@ import WeekendListContainer from './components/WeekendListContainer.jsx';
 class App extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			today: [],
+			week: [],
+		}
+	}
+	componentDidMount() {
+		fetch('/loadWeekend')
+			.then((response) =>{
+				return response.json();
+			})
+			.then((data) =>{
+				let events = JSON.parse(data).events;
+				this.setState({
+					week: events,
+				});
+				console.log(this.state.week.length);
+			});
+		fetch('/loadToday')
+			.then((response) =>{
+				return response.json()
+			})
+			.then((data) =>{
+				let events = JSON.parse(data).events;
+				this.setState({
+					today: events,
+				});
+				console.log(this.state.today.length);
+			});
 	}
 
 	render() {
@@ -22,3 +50,5 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+// using fetch in the post request. data field (in ajax) is the body
