@@ -1,11 +1,32 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const DateSearch = (props) => {
-	return (
-		<div className="col">
-			<input type="date" data-date-inline-picker="true" />
-		</div>
-	);
-};
+class DateSearch extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			date: moment(),
+		}
+		this.handleChange = this.handleChange.bind(this);
+	}
+	
+	handleChange(date) {
+		this.setState({
+			date: date
+		});
+		this.props.onChange('date', date.format('MM/DD/YYYY'));
+	}
+
+	render() {
+		return (
+			<div className="col">
+				<DatePicker selected={this.state.date} onChange={this.handleChange} placeholderText="Enter a Date"/>
+
+			</div>
+		);
+	}
+}
 
 export default DateSearch;
