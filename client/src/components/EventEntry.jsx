@@ -15,7 +15,7 @@ const EventEntry = (props) => {
 	return (
 		<div className="card">
 			<a href={props.event.url}>
-				<img className="card-img-top" src={imageUrl}/>
+				<img src={imageUrl}/>
 				<div className="card-body">
 					<time className="eventTime">{props.event.start.local}</time>
 					<div className="card-itle">{props.event.name.text}</div>
