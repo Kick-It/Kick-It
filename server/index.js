@@ -5,6 +5,10 @@ const https = require("https");
 const getEvents = require('../lib/eventbrite.js');
 const Promise = require('bluebird');
 const PORT = process.env.PORT || 3000;
+<<<<<<< HEAD
+=======
+
+>>>>>>> testing heroku
 
 const app = express();
 
