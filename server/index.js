@@ -20,12 +20,34 @@ app.use(express.static(__dirname + '/../client/dist'));
 //     });
 // });
 
+//id
+//name
+//description
+//price
+//url
+//image_url
+//start_datetime
+//end_datetime
+
+//TEST CHANGES WEDS
+
 app.get('/loadWeekend', function (req, res) {
   getEvents.month()
-    .then((data)=> {
-      //save to DB
+    .then((data)=> {    
+      let dataFormatted = data.events.map((event) => {
+        return {
+          name: event.name.text,
+          description: event.description.text,
+          price: event.is_free,
+          url: event.resource_url,
+          image_url: event.logo.url,
+          start_datetime: event.start.local,
+          end_datetime: event.end.local,
+        } 
+      });
+      // save dataFormatted to DB
     })
-  getEvents.week()
+  getEvents.weekend()
     .then((data) =>{
       res.json(data);
     });
