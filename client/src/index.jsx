@@ -22,7 +22,6 @@ class App extends React.Component {
 				this.setState({
 					week: events,
 				});
-				console.log(this.state.week.length);
 			});
 		fetch('/loadToday')
 			.then((response) =>{
@@ -33,15 +32,28 @@ class App extends React.Component {
 				this.setState({
 					today: events,
 				});
-				console.log(this.state.today.length);
 			});
+	}
+
+	//create a function that is passed down to search Container
+	// makes a post request to the server with the data
+	runFilters(filters) {
+		console.log(filters);
+		fetch('/filter', {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
+			body: JSON.stringify(filters),
+		});
 	}
 
 	render() {
 		return (
 			<div>
 				<h1>Kick It</h1>
-				<SearchBarContainer />
+				<SearchBarContainer runFilters={this.runFilters.bind(this)}/>
 				<div className="album text-muted">
 					<div className="container">
 						<EventListContainer />
