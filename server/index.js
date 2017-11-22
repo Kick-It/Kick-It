@@ -6,9 +6,6 @@ const getEvents = require('../lib/eventbrite.js');
 const Promise = require('bluebird');
 const PORT = process.env.PORT || 3000;
 
-const addEvents = require('../database.index.js').addEvents;
-const searchAllEvents = require('../database.index.js').searchAllEvents;
-
 const app = express();
 
 app.use(bodyParser.json());
