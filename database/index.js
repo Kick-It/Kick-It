@@ -39,7 +39,6 @@ class Event extends bookshelf.Model {
   getVenue(venue_id) {
 
   }
-<<<<<<< HEAD
 
   getCategory(category_id) {
 
@@ -81,9 +80,6 @@ class Event extends bookshelf.Model {
 //   	return () => client.end();
 //   }
 // });
-=======
-}); 
->>>>>>> d2dddaafb0e6d0068f58b7feee6e7e9ae11d4ab1
 
 // search event table 
 // let searchEvents = client.query((/* add query */));
