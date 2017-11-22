@@ -59,40 +59,29 @@ const Events = bookshelf.Collection.extend({
 })
 
 
-// add to event table
-// let addToEvents = client.query (
-//   `INSERT INTO events(id, name, description, venue_id, url, logo_url, start, end, is_free, category_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [id, name, description, venue_id, url, logo_url, start, end, is_free, category_id], (err, res) => {
-//   if (err) {
-//     return err;
-//   } else {
-//   	return () => client.end();
-//   }
-// });
+module.exports = {
+  // add events to table
+  addEvents: (eventsList) => {
+    eventsList.forEach( (event) => {
+      Events.add(event);
+    });
+  },
 
-module.exports
+  // search for today's events
+  getTodaysEvents: () => {
+    Promise.resolve(Events.query( (qb) => {
+      qb.where('end_datetime', '>', moment().format()).orderBy('start_datetime', 'DESC');
+    }).fetch());
+  },
 
-// add events to table
-const addEvents = (eventsList) => {
-  eventsList.forEach( (event) => {
-    Events.add(event);
-  });
+  // search for events in table
+  // categories will always be a list of category
+  searchAllEvents: (date, categories, price) => {
+    Promise.resolve(Events.query( (qb) => {
+      qb.where('start_datetime', '=', date).andWhere('category_id', 'in', categories).andWhere('price', '=', price)
+    }).fetch());
+  }
 }
-
-// search for today's events
-const getTodaysEvents = () => {
-  return Events.query( (qb) => {
-    qb.where('end_datetime', '>', moment().format()).orderBy('start_datetime', 'DESC');
-  }).fetch();
-}
-
-
-// search for events in table
-const searchAllEvents = (date, categories, price) => {
-  return Events.query( (qb) => {
-    qb.where('start_datetime', '=', date).andWhere('category_id', 'in', categories).andWhere('price', '=', price)
-  }).fetch();
-}
-
 
 //==========================================================================================
 //                    Categories Table
@@ -139,17 +128,5 @@ const getCategoryName = (category_id) => {
 // //search categories_events table
 // let searchVenues_Events = client.query((/* add query */));
 
-
-//==========================================================================================
-//                    Exports
-//========================================================================================== 
-
-module.exports.addEvents = addEvents;
-module.exports.getTodaysEvents = getTodaysEvents;
-module.exports.searchAllEvents = searchAllEvents;
-// module.exports.addToCategories = addToCategories;
-// module.exports.searchCategories = searchCategories;
-// module.exports.addToCategories_Events = addToCategories_Events;
-// module.exports.searchCategories_Events = searchCategories_Events;
 
 
