@@ -1,44 +1,45 @@
 // pg allows node to use postgres
-const pg = require('pg')
+const pg = require('pg');
 const config = require('../knexfile.js');  
 const dev = 'development';
-const prod = 'production';  
-let knex = require('knex')(config[dev])
+const prod = 'production';
+let knex = require('knex')(config[dev]);
 
 knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
   knex.raw('CREATE DATABASE kickit;').then( () => {
-    knex.destroy()
-    config[dev]['connection']['database'] = 'kickit'
-    knex = require('knex')(config[dev])
-    module.exports = knex
+    knex.destroy();
+    config[dev]['connection']['database'] = 'kickit';
+    knex = require('knex')(config[dev]);
+    module.exports = knex;
   })
   .then( () => {
     knex.raw(`DROP TABLE IF EXISTS events;`).then( (res) => {
       knex.schema.createTable('events', (table) => {
-        table.increments('id')
-        table.string('name')
-        table.text('description', 'longtext')
-        // table.foreign('venue_id')
-        table.string('price')
-        table.string('url')
-        table.string('image_url')
-        table.dateTime('start_datetime')
-        table.dateTime('end_datetime')
+        table.increments('id');
+        table.string('name');
+        table.text('description', 'longtext');
+        // table.foreign('venue_id');
+        table.string('price');
+        table.string('url');
+        table.string('image_url');
+        table.dateTime('start_datetime');
+        table.dateTime('end_datetime');
         // table.foreign('category_id');
       })
       .then( (res) => {
-        console.log('CREATE TABLE res: ', res)
+        console.log('CREATE TABLE res: ', res);
       }).catch( ( err) => {
-        console.log('Error occurred when creating events table: ', err)
+        console.log('Error occurred when creating events table: ', err);
       })
     })
   })
 })
 
 
-const bookshelf = require('bookshelf')(knex)
-const _ = require('lodash')
-const Promise = require('bluebird')
+const bookshelf = require('bookshelf')(knex);
+const _ = require('lodash');
+const Promise = require('bluebird');
+const moment = require('moment');
 
 
 //==========================================================================================
@@ -47,15 +48,7 @@ const Promise = require('bluebird')
 
 class Event extends bookshelf.Model {
   get tableName() {
-    return 'events'
-  }
-
-  getVenue(venue_id) {
-
-  }
-
-  getCategory(category_id) {
-
+    return 'events';
   }
 }
 
@@ -76,17 +69,28 @@ const Events = bookshelf.Collection.extend({
 //   }
 // });
 
+module.exports
+
 // add events to table
 const addEvents = (eventsList) => {
   eventsList.forEach( (event) => {
-    Events.add(event)
-  })
+    Events.add(event);
+  });
+}
+
+// search for today's events
+const getTodaysEvents = () => {
+  return Events.query( (qb) => {
+    qb.where('end_datetime', '>', moment().format()).orderBy('start_datetime', 'DESC');
+  }).fetch();
 }
 
 
 // search for events in table
-const searchAllEvents = () => {
-  return new Events.fetch()
+const searchAllEvents = (date, categories, price) => {
+  return Events.query( (qb) => {
+    qb.where('start_datetime', '=', date).andWhere('category_id', 'in', categories).andWhere('price', '=', price)
+  }).fetch();
 }
 
 
@@ -105,11 +109,11 @@ const Categories = bookshelf.Collection.extend({
 })
 
 // add events to table
-const addCategory = (categoryList) => {
-  categoryList.forEach( (category) => {
-    Categories.add(category)
-  })
-}
+// const addCategory = (categoryList) => {
+//   categoryList.forEach( (category) => {
+//     Categories.add(category)
+//   })
+// }
 
 // search for events in table
 const getCategoryName = (category_id) => {
@@ -141,6 +145,7 @@ const getCategoryName = (category_id) => {
 //========================================================================================== 
 
 module.exports.addEvents = addEvents;
+module.exports.getTodaysEvents = getTodaysEvents;
 module.exports.searchAllEvents = searchAllEvents;
 // module.exports.addToCategories = addToCategories;
 // module.exports.searchCategories = searchCategories;
