@@ -5,6 +5,8 @@ const https = require("https");
 const getEvents = require('../lib/eventbrite.js');
 const Promise = require('bluebird');
 const PORT = process.env.PORT || 3000;
+const searchAllEvents = require('../database.index.js').searchAllEvents;
+
 
 const app = express();
 
@@ -70,6 +72,7 @@ app.post('/filter', function(req,res) {
 // ======================================================================
 //                    Send today's data back to the client
 // ======================================================================
+
 app.get('/loadToday', function (req, res) {
   getEvents.today()
     .then((data) =>{
