@@ -59,6 +59,8 @@ class Event extends bookshelf.Model {
   }
 }
 
+
+
 const Events = bookshelf.Collection.extend({
   model: Event
 })

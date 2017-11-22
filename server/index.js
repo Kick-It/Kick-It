@@ -3,29 +3,41 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const https = require("https");
 const getEvents = require('../lib/eventbrite.js');
-const db = require('../database/index.js')
+const Promise = require('bluebird');
+
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
-app.get('/loadMonth', function (req, res) {
-  console.log('A GET request was submitted on load');
-  // console.log(req.query);
-  getEvents.month((data) => {
-    // ### save data to DB.
-    res.json(data);
-  });
+// within one of the initialized routes, i want to call getEvents.month
+// app.get('/storeMonth', function (req, res) {
+//   return getEvents.month().then((data) =>{
+//     // ### save data to DB.
+//     res.statusCode();
+//     res.end();
+//     });
+// });
+
+app.get('/loadWeekend', function (req, res) {
+  getEvents.month()
+    .then((data)=> {
+      //save to DB
+    })
+  getEvents.week()
+    .then((data) =>{
+      res.json(data);
+    });
 });
 
-app.get('/loadWeek', function (req, res) {
-  console.log('A GET request was submitted on load');
-  getEvents.week((data) => {
-    // ### save data to DB.
-    res.json(data);
-  });
+app.get('/loadToday', function (req, res) {
+  getEvents.today()
+    .then((data) =>{
+      res.json(data);
+    });
 });
+    
 
 app.listen(3000, function() {
   console.log('listening on port 3000!');
