@@ -22,7 +22,8 @@ class SearchBarContainer extends React.Component {
 	}
 
 	onClick(e) {
-		console.log(this.state);
+		this.props.runFilters(this.state);
+		//console.log(this.state);
 		e.preventDefault();
 	}
 
