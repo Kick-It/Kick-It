@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
-// within one of the initialized routes, i want to call getEvents.month
+//testing
 // app.get('/storeMonth', function (req, res) {
 //   return getEvents.month().then((data) =>{
 //     // ### save data to DB.
