@@ -29,7 +29,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 //start_datetime
 //end_datetime
 
-//TEST CHANGES WEDS
+//TEST CHANGES 2
 
 app.get('/loadWeekend', function (req, res) {
   getEvents.month()
