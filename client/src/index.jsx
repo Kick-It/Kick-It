@@ -33,6 +33,8 @@ class App extends React.Component {
 					today: events,
 				});
 			});
+		fetch('/loadVenues')
+			.then()
 	}
 
 	//create a function that is passed down to search Container
