@@ -82,15 +82,6 @@ const Events = bookshelf.Collection.extend({
   model: Event
 })
 
-// add to event table
-// let addToEvents = client.query (
-//   `INSERT INTO events(id, name, description, venue_id, url, logo_url, start, end, is_free, category_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [id, name, description, venue_id, url, logo_url, start, end, is_free, category_id], (err, res) => {
-//   if (err) {
-//     return err;
-//   } else {
-//   	return () => client.end();
-//   }
-// });
 
 module.exports = {
   // add events to table
