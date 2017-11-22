@@ -68,7 +68,6 @@ const moment = require('moment');
 const categoryList = require('../category_map.json');
 
 
-
 //==========================================================================================
 //                    Events Table
 //==========================================================================================
@@ -145,6 +144,7 @@ const addCategories = (categoryList) => {
   Categories.add(categoryList.categories);
 }
 
+
 addCategories(categoryList);
 
 
@@ -157,6 +157,7 @@ class Venue extends bookshelf.Model {
     return 'venues'
   }
 }
+
 
 const Venues = bookshelf.Collection.extend({
   model: Venue
