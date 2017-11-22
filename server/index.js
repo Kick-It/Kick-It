@@ -34,23 +34,33 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.get('/loadWeekend', function (req, res) {
   getEvents.month()
     .then((data)=> {    
-      let dataFormatted = data.events.map((event) => {
+      let parsed = JSON.parse(data);
+      let dataFormatted = parsed.events.map((event) => {
+        let imageUrl = event.logo ? event.logo.url : 'https://cdn.evbstatic.com/s3-build/perm_001/f8c5fa/django/images/discovery/default_logos/4.png';    
+        let catID = event.subcategory_id === 17001 ? event.subcategory_id : event.category_id; 
+        // if subcategory ID = 17,001 -> subcategory ID
+
         return {
+          id: event.id,
           name: event.name.text,
           description: event.description.text,
+          venue_id: event.venue_id,
           price: event.is_free,
-          url: event.resource_url,
-          image_url: event.logo.url,
+          url: event.url,
+          image_url: imageUrl,
           start_datetime: event.start.local,
           end_datetime: event.end.local,
-        } 
+          cateogry_id: event.category_id,
+        }
       });
+      console.log(dataFormatted);
       // save dataFormatted to DB
-    })
+    
   getEvents.weekend()
     .then((data) =>{
       res.json(data);
     });
+  });
 });
 
 app.get('/loadToday', function (req, res) {
