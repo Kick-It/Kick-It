@@ -23,7 +23,6 @@ class App extends React.Component {
 				this.setState({
 					weekend: events,
 				});
-				console.log('WEEKEND EVENTS', this.state.weekend)
 			});
 		fetch('/loadToday')
 			.then((response) =>{
@@ -34,7 +33,6 @@ class App extends React.Component {
 				this.setState({
 					today: events,
 				});
-				console.log('TODAYS events', this.state.today);
 			});
 	}
 
