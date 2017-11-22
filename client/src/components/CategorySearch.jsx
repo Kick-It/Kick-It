@@ -1,54 +1,71 @@
 import React from 'react';
 
-const CategorySearch = (props) => {
-	return (
-		<div className="col-6">
-			<div className="row">
+class CategorySearch extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			category: [],
+		}
+		this.onCheck = this.onCheck.bind(this);
+	}
+
+	onCheck(e) {
+		let category = this.state.category;
+		if (category.includes(e.target.value)) {
+			category.splice(category.indexOf(e.target.value), 1);
+		} else {
+			category.push(e.target.value);
+		}
+		this.setState({category: category});
+		this.props.onChange('category', category);
+	}
+
+	render() {
+		return (
+			<div className="col-6">
 				<div className="form-check form-check-inline">
 					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="music" /> Music
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="music" onChange={this.onCheck}/> Music
 					</label>
 				</div>
 				<div className="form-check form-check-inline">
 					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="food" /> Food/Drinks
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="food" onChange={this.onCheck}/> Food/Drinks
 					</label>
 				</div>
 				<div className="form-check form-check-inline">
 					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox3" value="community" /> Community Events
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox3" value="community" onChange={this.onCheck}/> Community Events
 					</label>
 				</div>
 				<div className="form-check form-check-inline">
 					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox7" value="dating" /> Dating
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox7" value="dating" onChange={this.onCheck}/> Dating
+					</label>
+				</div>
+				<div className="form-check form-check-inline">
+					<label className="form-check-label">
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox4" value="entertainment" onChange={this.onCheck}/> Entertainment
+					</label>
+				</div>
+				<div className="form-check form-check-inline">
+					<label className="form-check-label">
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox5" value="science" onChange={this.onCheck}/> Science/Tech
+					</label>
+				</div>
+				<div className="form-check form-check-inline">
+					<label className="form-check-label">
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox6" value="autoBoatAir" onChange={this.onCheck}/> Auto-Boat-Air
+					</label>
+				</div>
+				<div className="form-check form-check-inline">
+					<label className="form-check-label">
+						<input className="form-check-input" type="checkbox" id="inlineCheckbox8" value="active" onChange={this.onCheck}/> Active
 					</label>
 				</div>
 			</div>
-			<div className="row">
-				<div className="form-check form-check-inline">
-					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox4" value="entertainment" /> Entertainment
-					</label>
-				</div>
-				<div className="form-check form-check-inline">
-					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox5" value="science" /> Science/Tech
-					</label>
-				</div>
-				<div className="form-check form-check-inline">
-					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox6" value="autoBoatAir" /> Auto-Boat-Air
-					</label>
-				</div>
-				<div className="form-check form-check-inline">
-					<label className="form-check-label">
-						<input className="form-check-input" type="checkbox" id="inlineCheckbox8" value="active" /> Active
-					</label>
-				</div>
-			</div>
-		</div>
-	);
+		);
+	}
 };
 
 export default CategorySearch;

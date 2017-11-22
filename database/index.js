@@ -1,35 +1,49 @@
 // pg allows node to use postgres
-let pg = require('pg')
-const knex = require('knex')({
-  client: 'pg',
-  connection: process.env.DATABASE_URL || 'postgres://localhost:5432/events'
+const pg = require('pg')
+const config = require('../knexfile.js');  
+const dev = 'development';
+const prod = 'production';  
+let knex = require('knex')(config[dev])
+
+knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
+  knex.raw('CREATE DATABASE kickit;').then( () => {
+    knex.destroy()
+    config[dev]['connection']['database'] = 'kickit'
+    knex = require('knex')(config[dev])
+    module.exports = knex
+  })
+  .then( () => {
+    knex.raw(`DROP TABLE IF EXISTS events;`).then( (res) => {
+      knex.schema.createTable('events', (table) => {
+        table.increments('id')
+        table.string('name')
+        table.text('description', 'longtext')
+        // table.foreign('venue_id')
+        table.string('price')
+        table.string('url')
+        table.string('image_url')
+        table.dateTime('start_datetime')
+        table.dateTime('end_datetime')
+        // table.foreign('category_id');
+      })
+      .then( (res) => {
+        console.log('CREATE TABLE res: ', res)
+      }).catch( ( err) => {
+        console.log('Error occurred when creating events table: ', err)
+      })
+    })
+  })
 })
+
+
 const bookshelf = require('bookshelf')(knex)
 const _ = require('lodash')
 const Promise = require('bluebird')
 
-// connect to local database
-// let connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/events';
-// let client = new pg.Client(connectionString);
-// client.connect();
 
 //==========================================================================================
 //                    Events Table
 //==========================================================================================
-
-// knex.schema.dropTableIfExists('events')
-knex.schema.createTableIfNotExists('events', (table) => {
-  table.string('id')
-  table.string('name')
-  table.text('description', longtext)
-  table.string('venue_id')
-  table.string('url')
-  table.string('image_url')
-  table.dateTime('start_datetime')
-  table.dateTime('end_datetime')
-  table.string('is_free')
-  table.string('category_id')
-})
 
 class Event extends bookshelf.Model {
   get tableName() {
@@ -45,31 +59,10 @@ class Event extends bookshelf.Model {
   }
 }
 
-  const Events = bookshelf.Collection.extend({
-    model: Event
-  })
+const Events = bookshelf.Collection.extend({
+  model: Event
+})
 
-  // add events to table
-  const addEvents = (eventsList) => {
-    eventsList.forEach( (event) => {
-      Events.add(event)
-    })
-  }
-
-  // search for events in table
-  const searchAllEvents = () => {
-    Events.fetch()
-  }
-
-
-//create event table
-// let eventTable = client.query( `CREATE TABLE events(${Event Schema})`, (err, res) => {
-//   if (err) {
-//     return err;
-//   } else {
-//     return () => client.end();
-//   }
-// });
 
 // add to event table
 // let addToEvents = client.query (
@@ -81,48 +74,64 @@ class Event extends bookshelf.Model {
 //   }
 // });
 
-// search event table 
-// let searchEvents = client.query((/* add query */));
+// add events to table
+const addEvents = (eventsList) => {
+  eventsList.forEach( (event) => {
+    Events.add(event)
+  })
+}
+
+
+// search for events in table
+const searchAllEvents = () => {
+  return new Events.fetch()
+}
 
 
 //==========================================================================================
 //                    Categories Table
 //==========================================================================================
 
-//create categories table
-let categoriesTable = client.query((/* add query */));
-
-// add to categories table 
-let addToCategories = client.query (/* add query */ (err, res) => {
-  if (err) {
-    return err;
-  } else {
-  	return () => client.end();
+class Category extends bookshelf.Model {
+  get tableName() {
+    return 'categories'
   }
-});
+}
 
-//search categories table
-let searchCategories = client.query((/* add query */));
+const Categories = bookshelf.Collection.extend({
+  model: Category
+})
 
+// add events to table
+const addCategory = (categoryList) => {
+  categoryList.forEach( (category) => {
+    Categories.add(category)
+  })
+}
+
+// search for events in table
+const getCategoryName = (category_id) => {
+  return new Categories.query({where: {id: category_id}}).fetchOne()
+}
 
 //==========================================================================================
 //                    Venues Table
 //==========================================================================================
 
 // create join events and categories table
-let venues_Table = client.query((/* add query */));
+// let venues_Table = client.query((/* add query */));
 
-// add to categories_events table 
-let addToVenues_Events = client.query (/* add query */ (err, res) => {
-  if (err) {
-    return err;
-  } else {
-    return () => client.end();
-  }
-});
+// // add to categories_events table 
+// let addToVenues_Events = client.query (/* add query */ (err, res) => {
+//   if (err) {
+//     return err;
+//   } else {
+//     return () => client.end();
+//   }
+// });
 
-//search categories_events table
-let searchVenues_Events = client.query((/* add query */));
+// //search categories_events table
+// let searchVenues_Events = client.query((/* add query */));
 
 
 //==========================================================================================
@@ -131,17 +140,9 @@ let searchVenues_Events = client.query((/* add query */));
 
 module.exports.addEvents = addEvents;
 module.exports.searchAllEvents = searchAllEvents;
-module.exports.addToCategories = addToCategories;
-module.exports.searchCategories = searchCategories;
-module.exports.addToCategories_Events = addToCategories_Events;
-module.exports.searchCategories_Events = searchCategories_Events;
-
-
-
-
-
-
-
-
+// module.exports.addToCategories = addToCategories;
+// module.exports.searchCategories = searchCategories;
+// module.exports.addToCategories_Events = addToCategories_Events;
+// module.exports.searchCategories_Events = searchCategories_Events;
 
 
