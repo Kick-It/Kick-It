@@ -5,13 +5,15 @@ const https = require("https");
 const getEvents = require('../lib/eventbrite.js');
 const Promise = require('bluebird');
 const PORT = process.env.PORT || 3000;
-const searchAllEvents = require('../database.index.js').searchAllEvents;
 
+const addEvents = require('../database.index.js').addEvents;
+const searchAllEvents = require('../database.index.js').searchAllEvents;
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
+
 
 //======================================================================
 //        Database Functions     
@@ -22,6 +24,9 @@ app.use(express.static(__dirname + '/../client/dist'));
 // ======================================================================
 //   API month's events + venues -> Save to DB
 //   API weekend's events ->  Client
+
+// ======================================================================
+//       Save month's data to the DB and send weekend Events to Client
 // ======================================================================
 
 app.get('/loadWeekend', function (req, res) {
@@ -61,20 +66,12 @@ app.post('/filter', function(req,res) {
   let date = req.body.date;
   let categories = req.body.category;
   let price = req.body.price;
-
-  searchAllEvents(date, categories, price)
-    .then((data)=>{
-      console.log(data)
-      //res.json(data);
-    });
+  searchAllEvents(date, categories, price);
 });
 
 // ======================================================================
 //                    Send today's data back to the client
 // ======================================================================
-  //searchAllEvents(date, categories, price);
-    
-
 app.get('/loadToday', function (req, res) {
   getEvents.today()
     .then((data) =>{
