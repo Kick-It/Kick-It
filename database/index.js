@@ -11,50 +11,49 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
     config[dev]['connection']['database'] = 'kickit';
     knex = require('knex')(config[dev]);
     module.exports = knex;
-  })
-  .then( () => {
+  }).then( () => {
+    knex.raw(`DROP TABLE IF EXISTS venues;`).then( (res) => {
+      knex.schema.createTable('venues', (table) => {
+        table.string('id').primary();
+        table.text('address', 'longtext');
+      })
+      .then( (res) => {
+        console.log('CREATE TABLE res: ', res);
+      }).catch( ( err) => {
+        console.log('Error occurred when creating venues table: ', err);
+      })
+    })
+  }).then( () => {
+    knex.raw(`DROP TABLE IF EXISTS categories;`).then( (res) => {
+      knex.schema.createTable('categories', (table) => {
+        table.string('id').primary();
+        table.string('shortname');
+        table.string('name');
+      })
+      .then( (res) => {
+        console.log('CREATE TABLE res: ', res);
+      }).catch( ( err) => {
+        console.log('Error occurred when creating categories table: ', err);
+      })
+    })
+  }).then( () => {
     knex.raw(`DROP TABLE IF EXISTS events;`).then( (res) => {
       knex.schema.createTable('events', (table) => {
         table.string('id').primary();
         table.string('name');
         table.text('description', 'longtext');
-        table.foreign('venue_id');
+        table.foreign('venue_id').references('venues.id');
         table.string('price');
         table.string('url');
         table.string('image_url');
         table.dateTime('start_datetime');
         table.dateTime('end_datetime');
-        table.foreign('category_id');
+        table.foreign('category_id').references('categories.id');
       })
       .then( (res) => {
         console.log('CREATE TABLE res: ', res);
       }).catch( ( err) => {
         console.log('Error occurred when creating events table: ', err);
-      })
-    }).then( () => {
-      knex.raw(`DROP TABLE IF EXISTS venues;`).then( (res) => {
-        knex.schema.createTable('venues', (table) => {
-          table.string('id').primary();
-          table.text('address', 'longtext');
-        })
-        .then( (res) => {
-          console.log('CREATE TABLE res: ', res);
-        }).catch( ( err) => {
-          console.log('Error occurred when creating venues table: ', err);
-        })
-      })
-    }).then( () => {
-      knex.raw(`DROP TABLE IF EXISTS categories;`).then( (res) => {
-        knex.schema.createTable('categories', (table) => {
-          table.string('id').primary();
-          table.string('shortname');
-          table.string('name');
-        })
-        .then( (res) => {
-          console.log('CREATE TABLE res: ', res);
-        }).catch( ( err) => {
-          console.log('Error occurred when creating categories table: ', err);
-        })
       })
     })
   })
