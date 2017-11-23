@@ -9,7 +9,7 @@ class EventListContainer extends React.Component {
  
 	render() {
 		let rows = [];
-		events.events.forEach((event, index) => {
+		this.props.events.forEach((event, index) => {
 			rows.push(<EventEntry event={event} key={index} />);
 		});
 		return (

@@ -15,38 +15,39 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
 // ======================================================================
-//       Save month's data to the DB and send weekend Events to Client
+//   API month's events + venues -> Save to DB
+//   API weekend's events ->  Client
 // ======================================================================
 
 app.get('/loadWeekend', function (req, res) {
-  getEvents.month()
-    .then((data)=> {    
-      let parsed = JSON.parse(data);
-      let dataFormatted = parsed.events.map((event) => {
-        let imageUrl = event.logo ? event.logo.url : 'https://cdn.evbstatic.com/s3-build/perm_001/f8c5fa/django/images/discovery/default_logos/4.png';    
-        let catID = event.subcategory_id === 17001 ? event.subcategory_id : event.category_id; 
-        let defaultPrice = event.is_free? true : false;
-        // is isFree is true, pass in true
-        return {
-          id: event.id,
-          name: event.name.text,
-          description: event.description.text,
-          venue_id: event.venue_id,
-          price: defaultPrice,
-          url: event.url,
-          image_url: imageUrl,
-          start_datetime: event.start.local,
-          end_datetime: event.end.local,
-          cateogry_id: event.category_id,
-        }
-      });
-      addEvents(dataFormatted);
+  // getEvents.month()
+  //   .then((data)=> {    
+  //     let parsed = JSON.parse(data);
+  //     //Save events to the DB
+  //     let monthEventsFormatted = parsed.events.map((event) => {
+  //       let imageUrl = event.logo ? event.logo.url : 'https://cdn.evbstatic.com/s3-build/perm_001/f8c5fa/django/images/discovery/default_logos/4.png';    
+  //       let catID = event.subcategory_id === 17001 ? event.subcategory_id : event.category_id; 
+  //       let defaultPrice = event.is_free ? 'free' : 'paid';
+  //       return {
+  //         id: event.id,
+  //         name: event.name.text,
+  //         description: event.description.text,
+  //         venue_id: event.venue_id,
+  //         price: defaultPrice,
+  //         url: event.url,
+  //         image_url: imageUrl,
+  //         start_datetime: event.start.local,
+  //         end_datetime: event.end.local,
+  //         cateogry_id: event.category_id,
+  //       }
+  //     });
+      //addEvents(monthEventsFormatted);
     
   getEvents.weekend()
     .then((data) =>{
       res.json(data);
     });
-  });
+  // });
 });
 
 // ======================================================================
@@ -57,7 +58,11 @@ app.post('/filter', function(req,res) {
   let categories = req.body.category;
   let price = req.body.price;
 
-  searchAllEvents(date, categories, price);
+  searchAllEvents(date, categories, price)
+    .then((data)=>{
+      console.log(data)
+      //res.json(data);
+    });
 });
 
 // ======================================================================

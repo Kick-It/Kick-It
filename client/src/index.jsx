@@ -9,7 +9,7 @@ class App extends React.Component {
 		super();
 		this.state = {
 			today: [],
-			week: [],
+			weekend: [],
 		}
 	}
 	componentDidMount() {
@@ -20,8 +20,9 @@ class App extends React.Component {
 			.then((data) =>{
 				let events = JSON.parse(data).events;
 				this.setState({
-					week: events,
+					weekend: events,
 				});
+				console.log('WEEKEND EVENTS', this.state.weekend)
 			});
 		fetch('/loadToday')
 			.then((response) =>{
@@ -32,9 +33,8 @@ class App extends React.Component {
 				this.setState({
 					today: events,
 				});
+				console.log('TODAYS events', this.state.today);
 			});
-		fetch('/loadVenues')
-			.then()
 	}
 
 	//create a function that is passed down to search Container
@@ -58,7 +58,7 @@ class App extends React.Component {
 				<SearchBarContainer runFilters={this.runFilters.bind(this)}/>
 				<div className="album text-muted">
 					<div className="container">
-						<EventListContainer />
+						<EventListContainer events={this.state.today}/>
 					</div>
 				</div>
 				<WeekendListContainer />
