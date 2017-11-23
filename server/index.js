@@ -26,7 +26,8 @@ app.use(express.static(__dirname + '/../client/dist'));
 //   API weekend's events ->  Client
 
 // ======================================================================
-//       Save month's data to the DB and send weekend Events to Client
+//   API month's events + venues -> Save to DB
+//   API weekend's events ->  Client
 // ======================================================================
 
 app.get('/loadWeekend', function (req, res) {
