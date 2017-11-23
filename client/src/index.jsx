@@ -5,8 +5,8 @@ import EventListContainer from './components/EventListContainer.jsx';
 import WeekendListContainer from './components/WeekendListContainer.jsx';
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 		this.state = {
 			today: [],
 			week: [],
