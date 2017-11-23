@@ -4,7 +4,7 @@ const request = require('request');
 const https = require("https");
 const getEvents = require('../lib/eventbrite.js');
 const Promise = require('bluebird');
-
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -71,6 +71,6 @@ app.get('/loadToday', function (req, res) {
 });
     
 
-app.listen(3000, function() {
-  console.log('listening on port 3000!');
+app.listen(PORT, function() {
+  console.log(`listening on port ${PORT}!`);
 });
