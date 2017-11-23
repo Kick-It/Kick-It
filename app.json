@@ -1,0 +1,20 @@
+{
+  "name": "Kick-It",
+  "scripts": {
+  },
+  "env": {
+    "API_key": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
