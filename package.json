@@ -7,9 +7,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "heroku-postbuild": "webpack -d --progress",
     "start": "nodemon server/index.js",
-    "watch": "webpack -d --watch"
+    "watch": "webpack -d --watch",
+    "build": "webpack --config webpack.config.js",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
