@@ -18,7 +18,8 @@ class App extends React.Component {
 				return response.json();
 			})
 			.then((data) =>{
-				let events = JSON.parse(data).events;
+				let events = JSON.parse(data)//.events;
+				console.log('events only', events);
 				this.setState({
 					weekend: events,
 				});
