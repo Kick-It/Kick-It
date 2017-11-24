@@ -19,8 +19,7 @@ class App extends React.Component {
 				return response.json();
 			})
 			.then((data) =>{
-				let events = JSON.parse(data)//.events;
-				console.log('events only', events);
+				let events = JSON.parse(data).events;
 				this.setState({
 					weekend: events,
 				});
@@ -60,7 +59,10 @@ class App extends React.Component {
 				<SearchBarContainer runFilters={this.runFilters.bind(this)}/>
 				<div className="album text-muted">
 					<div className="container">
-						<EventListContainer events={this.state.today}/>
+						<EventListContainer 
+							todayEvents={this.state.today}
+							weekendEvents={this.state.weekend} 
+						/>
 					</div>
 				</div>
 				
