@@ -21,8 +21,6 @@
     "url": "https://github.com/Kick-It/Kick-It/issues"
   },
   "homepage": "https://github.com/Kick-It/Kick-It#readme",
-  "devDependencies": {
-  },
   "dependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
