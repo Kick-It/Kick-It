@@ -4,6 +4,7 @@ import SearchBarContainer from './components/SearchBarContainer.jsx';
 import EventListContainer from './components/EventListContainer.jsx';
 import WeekendListContainer from './components/WeekendListContainer.jsx';
 
+
 class App extends React.Component {
 	constructor() {
 		super();
@@ -62,7 +63,7 @@ class App extends React.Component {
 						<EventListContainer events={this.state.today}/>
 					</div>
 				</div>
-				<WeekendListContainer />
+				
 			</div>
 		)
 	}
