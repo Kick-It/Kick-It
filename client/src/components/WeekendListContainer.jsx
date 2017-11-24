@@ -19,7 +19,9 @@ class WeekendListContainer extends Component {
     const { visible } = this.state
     return (
       <div>
-        <Button onClick={this.toggleVisibility}>Weekend Events</Button>
+        <Button 
+          onClick={this.toggleVisibility}>Weekend Events
+        </Button>
         <Sidebar.Pushable as={Segment}>
           <Sidebar
             as={Menu}
@@ -45,9 +47,9 @@ class WeekendListContainer extends Component {
             </Menu.Item>
           </Sidebar>
           <Sidebar.Pusher>
-              <Segment basic  className="row">
+              <div basic  className="row">
               {rows}
-              </Segment>  
+              </div>  
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>

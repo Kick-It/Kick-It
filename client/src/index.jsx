@@ -34,7 +34,7 @@ class App extends React.Component {
 				this.setState({
 					today: events,
 				});
-				console.log('TODAYS events', this.state.today);
+				//console.log('TODAYS events', this.state.today);
 			});
 	}
 
@@ -61,7 +61,7 @@ class App extends React.Component {
 					<div className="container">
 						<EventListContainer 
 							todayEvents={this.state.today}
-							weekendEvents={this.state.weekend} 
+							weekendEvents={this.state.weekend.slice(0,20)} 
 						/>
 					</div>
 				</div>

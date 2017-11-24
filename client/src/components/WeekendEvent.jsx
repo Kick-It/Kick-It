@@ -1,5 +1,6 @@
 import React from 'react';
 import { Menu, Image, Icon, Header } from 'semantic-ui-react'
+import moment from 'moment';
 
 class WeekendEvent extends React.Component{
 	constructor(props) {
@@ -9,7 +10,7 @@ class WeekendEvent extends React.Component{
 	render() {
 		return(
 			<Menu.Item>
-			{this.props.event.name.text}
+			{this.props.event.name.text}<div>{moment(this.props.event.start.local).calendar()}</div>
 			</Menu.Item>
 		)
 	}

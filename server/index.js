@@ -28,7 +28,7 @@ app.get('/loadWeekend', function (req, res) {
   getEvents.month()
     .then((data)=> {    
       let parsed = JSON.parse(data);
-      let monthEventsFormatted = parsed.events.map((event) => {
+      return parsed.events.map((event) => {
         let imageUrl = event.logo ? event.logo.url : 'https://cdn.evbstatic.com/s3-build/perm_001/f8c5fa/django/images/discovery/default_logos/4.png';    
         let catID = event.subcategory_id === 17001 ? event.subcategory_id : event.category_id; 
         let defaultPrice = event.is_free ? 'free' : 'paid';
@@ -45,13 +45,16 @@ app.get('/loadWeekend', function (req, res) {
           cateogry_id: event.category_id,
         }
       });
-    });
-//      addEvents(monthEventsFormatted);
-  
-  getEvents.weekend()
+    })
+    .then((formattedEvents) => {
+      //save to the DB
+    })
+    .then(()=> {
+      getEvents.weekend()
     .then((data) =>{
       res.json(data); 
-  });
+      });
+    })
 });
 
 // ======================================================================
