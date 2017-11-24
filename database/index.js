@@ -1,9 +1,14 @@
 // pg allows node to use postgres
-const pg = require('pg');
-const config = require('../knexfile.js');  
-const dev = 'development';
-const prod = 'production';
+// let pg = require('pg');
+let config = require('../knexfile.js');  
+let dev = 'development';
+let prod = 'production';
 let knex = require('knex')(config[dev]);
+let bookshelf = require('bookshelf')(knex);
+let _ = require('lodash');
+let Promise = require('bluebird');
+let categoryList = require('../category_map.json');
+
 
 knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
   knex.raw('CREATE DATABASE kickit;').then( () => {
@@ -12,61 +17,44 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
     knex = require('knex')(config[dev]);
     module.exports = knex;
   }).then( () => {
-    knex.raw(`DROP TABLE IF EXISTS venues;`).then( (res) => {
+    knex.raw(`DROP TABLE IF EXISTS venues;`).then( () => {
       knex.schema.createTable('venues', (table) => {
         table.string('id').primary();
         table.text('address', 'longtext');
-      })
-      .then( (res) => {
-        console.log('CREATE TABLE res: ', res);
-      }).catch( ( err) => {
-        console.log('Error occurred when creating venues table: ', err);
-      })
-    })
-  }).then( () => {
-    knex.raw(`DROP TABLE IF EXISTS categories;`).then( (res) => {
-      knex.schema.createTable('categories', (table) => {
-        table.string('id').primary();
-        table.string('shortname');
         table.string('name');
-      })
-      .then( (res) => {
-        console.log('CREATE TABLE res: ', res);
-      }).catch( ( err) => {
-        console.log('Error occurred when creating categories table: ', err);
-      })
-    })
-  }).then( () => {
-    knex.raw(`DROP TABLE IF EXISTS events;`).then( (res) => {
-      knex.schema.createTable('events', (table) => {
-        table.string('id').primary();
-        table.string('name');
-        table.text('description', 'longtext');
-        table.foreign('venue_id').references('venues.id');
-        table.string('price');
-        table.string('url');
-        table.string('image_url');
-        table.dateTime('start_datetime');
-        table.dateTime('end_datetime');
-        table.foreign('category_id').references('categories.id');
-      })
-      .then( (res) => {
-        console.log('CREATE TABLE res: ', res);
-      }).catch( ( err) => {
-        console.log('Error occurred when creating events table: ', err);
+      }).then( () => {
+        knex.raw(`DROP TABLE IF EXISTS categories;`).then( () => {
+          knex.schema.createTable('categories', (table) => {
+            table.string('id').primary();
+            table.string('shortname');
+            table.string('name');
+          }).then( () => {
+            console.log('Inserting values to categories table..');
+            Promise.resolve(addCategories(categoryList)).then( () => {
+              knex.raw(`DROP TABLE IF EXISTS events;`).then( () => {
+                console.log('Creating events table..');
+                knex.schema.createTable('events', (table) => {
+                  table.string('id').primary();
+                  table.string('name');
+                  table.text('description', 'longtext');
+                  table.string('venue_id');
+                  table.foreign('venue_id').references('venues.id');
+                  table.string('price');
+                  table.string('url');
+                  table.string('image_url');
+                  table.dateTime('start_datetime');
+                  table.dateTime('end_datetime');
+                  table.string('category_id');
+                  table.foreign('category_id').references('categories.id');
+                }).catch((err) => { console.log(err) });
+              })
+            })
+          })
+        })
       })
     })
   })
-})
-
-
-const bookshelf = require('bookshelf')(knex);
-const _ = require('lodash');
-const Promise = require('bluebird');
-const moment = require('moment');
-
-const categoryList = require('../category_map.json');
-
+});
 
 //==========================================================================================
 //                    Events Table
@@ -78,7 +66,7 @@ class Event extends bookshelf.Model {
   }
 }
 
-const Events = bookshelf.Collection.extend({
+let Events = bookshelf.Collection.extend({
   model: Event
 })
 
@@ -90,7 +78,8 @@ module.exports = {
     // {name: '', description: '', venue_id: '', price: '', url: '', image_url: '', start_datetime: '', end_datetime: '', category_id: '' }
   addEvents: (eventsList) => {
     // {merge: true} updates existing models
-    Events.add(eventsList, [{merge: true}]);
+    Events.forge().add(eventsList, [{merge: true}]);
+    // Events.add(eventsList, [{merge: true}]);
   },
 
   // search for events in table
@@ -111,6 +100,8 @@ module.exports = {
           qb.columns('categories.name');
         }
       }]
+    }).catch( (err) => {
+      console.log('Error search events: ', err);
     }));
   }
 }
@@ -119,23 +110,19 @@ module.exports = {
 //                    Categories Table
 //==========================================================================================
 
-class Category extends bookshelf.Model {
-  get tableName() {
-    return 'categories'
-  }
-}
-
-const Categories = bookshelf.Collection.extend({
-  model: Category
+let Category = bookshelf.Model.extend({
+  tableName: 'categories'
 })
 
+
 // add categories to table
-const addCategories = (categoryList) => {
-  Categories.add(categoryList.categories);
+let addCategories = (categoryList) => {
+  categoryList.categories.map( (category) => {
+    knex.raw(`INSERT INTO categories (id, shortname, name) VALUES (${category.id}, '${category.shortname}', '${category.name}')`).catch( (err) => {
+      console.log('Error occurred adding categories: ', err);
+    });
+  });
 }
-
-
-addCategories(categoryList);
 
 
 //==========================================================================================
@@ -154,7 +141,7 @@ const Venues = bookshelf.Collection.extend({
 })
 
 // add categories to table
-const addVenue = (venue) => {
-  Venues.add(venue, [{merge: true}]);
+let addVenue = (venue) => {
+  Venues.forge().add(venue, [{merge: true}]);
 }
 
