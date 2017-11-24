@@ -1,13 +1,13 @@
 // pg allows node to use postgres
-// let pg = require('pg');
-let config = require('../knexfile.js');  
-let dev = 'development';
-let prod = 'production';
-let knex = require('knex')(config[dev]);
-let bookshelf = require('bookshelf')(knex);
-let _ = require('lodash');
-let Promise = require('bluebird');
-let categoryList = require('../category_map.json');
+const pg = require('pg');
+const config = require('../knexfile.js');  
+const dev = 'development';
+const prod = 'production';
+const knex = require('knex')(config[dev]);
+const bookshelf = require('bookshelf')(knex);
+const _ = require('lodash');
+const Promise = require('bluebird');
+const categoryList = require('../category_map.json');
 
 
 knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
@@ -66,7 +66,7 @@ class Event extends bookshelf.Model {
   }
 }
 
-let Events = bookshelf.Collection.extend({
+const Events = bookshelf.Collection.extend({
   model: Event
 })
 
@@ -116,7 +116,7 @@ let Category = bookshelf.Model.extend({
 
 
 // add categories to table
-let addCategories = (categoryList) => {
+const addCategories = (categoryList) => {
   categoryList.categories.map( (category) => {
     knex.raw(`INSERT INTO categories (id, shortname, name) VALUES (${category.id}, '${category.shortname}', '${category.name}')`).catch( (err) => {
       console.log('Error occurred adding categories: ', err);
@@ -141,7 +141,7 @@ const Venues = bookshelf.Collection.extend({
 })
 
 // add categories to table
-let addVenue = (venue) => {
+const addVenue = (venue) => {
   Venues.forge().add(venue, [{merge: true}]);
 }
 
