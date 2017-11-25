@@ -3,7 +3,7 @@ const pg = require('pg');
 const config = require('../knexfile.js');  
 const dev = 'development';
 const prod = 'production';
-const knex = require('knex')(config[dev]);
+let knex = require('knex')(config[dev]);
 const bookshelf = require('bookshelf')(knex);
 const _ = require('lodash');
 const Promise = require('bluebird');
@@ -17,13 +17,13 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
     knex = require('knex')(config[dev]);
     module.exports = knex;
   }).then( () => {
-    knex.raw(`DROP TABLE IF EXISTS venues;`).then( () => {
+    // knex.raw(`DROP TABLE IF EXISTS venues;`).then( () => {
       knex.schema.createTable('venues', (table) => {
         table.string('id').primary();
         table.text('address', 'longtext');
         table.string('name');
       }).then( () => {
-        knex.raw(`DROP TABLE IF EXISTS categories;`).then( () => {
+        // knex.raw(`DROP TABLE IF EXISTS categories;`).then( () => {
           knex.schema.createTable('categories', (table) => {
             table.string('id').primary();
             table.string('shortname');
@@ -31,14 +31,14 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
           }).then( () => {
             console.log('Inserting values to categories table..');
             Promise.resolve(addCategories(categoryList)).then( () => {
-              knex.raw(`DROP TABLE IF EXISTS events;`).then( () => {
+              // knex.raw(`DROP TABLE IF EXISTS events;`).then( () => {
                 console.log('Creating events table..');
                 knex.schema.createTable('events', (table) => {
                   table.string('id').primary();
                   table.string('name');
                   table.text('description', 'longtext');
                   table.string('venue_id');
-                  table.foreign('venue_id').references('venues.id');
+                  // table.foreign('venue_id').references('venues.id');
                   table.string('price');
                   table.string('url');
                   table.string('image_url');
@@ -47,9 +47,9 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
                   table.string('category_id');
                   table.foreign('category_id').references('categories.id');
                 }).catch((err) => { console.log(err) });
-              })
-            })
-          })
+              // })
+            // })
+          // })
         })
       })
     })
@@ -77,32 +77,43 @@ module.exports = {
   // an event object should look like the following:
     // {name: '', description: '', venue_id: '', price: '', url: '', image_url: '', start_datetime: '', end_datetime: '', category_id: '' }
   addEvents: (eventsList) => {
-    // {merge: true} updates existing models
-    Events.forge().add(eventsList, [{merge: true}]);
-    // Events.add(eventsList, [{merge: true}]);
+
+    Promise.resolve(eventsList.forEach( (event) => {
+      console.log('event: ', event);
+
+      knex.raw(`INSERT INTO events (id, name, description, venue_id, price, url, image_url, start_datetime, end_datetime, category_id) VALUES ('${event.id}', ${event.name}, ${event.description}, '${event.venue_id}', '${event.price}', '${event.url}', '${event.image_url}', '${event.start_datetime}', '${event.end_datetime}', '${event.category_id}')`).catch( (err) => {
+        console.log('Error occurred adding events: ', err);
+      });
+    }));
   },
 
   // search for events in table
   // categories will always be a list of category
   searchAllEvents: (date, categories, price) => {
-    Promise.resolve(Events.query( (qb) => {
-      qb.where('start_datetime', '=', date).andWhere('category_id', 'in', categories).andWhere('price', '=', price)
-    }).fetchAll({
-      withRelated: [{
-        'venues': (qb) => {
-          qb.select('venues.id');
-          qb.columns('venues.name');
-        }
-      },
-      {
-        'categories': (qb) => {
-          qb.select('categories.id', 'categories.shortname');
-          qb.columns('categories.name');
-        }
-      }]
-    }).catch( (err) => {
-      console.log('Error search events: ', err);
-    }));
+    Promise.resolve( () => {
+
+      knex.raw(`SELECT * FROM events WHERE `).catch( (err) => {
+        console.log('Error occurred adding events: ', err);
+      });
+    });
+    // Promise.resolve(Events.query( (qb) => {
+    //   qb.where('start_datetime', '=', date).andWhere('category_id', 'in', categories).andWhere('price', '=', price)
+    // }).fetchAll({
+    //   withRelated: [{
+    //     'venues': (qb) => {
+    //       qb.select('venues.id');
+    //       qb.columns('venues.name');
+    //     }
+    //   },
+    //   {
+    //     'categories': (qb) => {
+    //       qb.select('categories.id', 'categories.shortname');
+    //       qb.columns('categories.name');
+    //     }
+    //   }]
+    // }).catch( (err) => {
+    //   console.log('Error search events: ', err);
+    // }));
   }
 }
 
