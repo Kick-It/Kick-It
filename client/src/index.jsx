@@ -49,6 +49,9 @@ class App extends React.Component {
 			},
 			method: 'POST',
 			body: JSON.stringify(filters),
+		})
+		.then((data) =>{
+			console.log('DATA RETURNED TO CLIENT SIDE ----->', typeof data);
 		});
 	}
 
