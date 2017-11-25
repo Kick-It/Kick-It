@@ -1,6 +1,6 @@
 module.exports = {
   development: {
-    client: 'postgresql',
+    client: 'pg',
     connection: {
     	hostname: 'postgres',
     	host: 'localhost',
@@ -8,7 +8,7 @@ module.exports = {
     }
   },
   production: {
-	client: 'postgresql',
+	client: 'pg',
 	connection: process.env.DATABASE_URL
   }
 }

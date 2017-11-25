@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 //======================================================================
 //        Database Functions     
 //======================================================================
-//const addEvents = require('../database/index.js').addEvents;
+const addEvents = require('../database/index.js').addEvents;
 //const searchAllEvents = require('../database.index/js').searchAllEvents;
 
 // ======================================================================
@@ -32,22 +32,25 @@ app.get('/loadWeekend', function (req, res) {
         let imageUrl = event.logo ? event.logo.url : 'https://cdn.evbstatic.com/s3-build/perm_001/f8c5fa/django/images/discovery/default_logos/4.png';    
         let catID = event.subcategory_id === 17001 ? event.subcategory_id : event.category_id; 
         let defaultPrice = event.is_free ? 'free' : 'paid';
+        let eventName = `$$${event.name.text}$$`;
+        let eventDesc = `$$${event.description.text}$$`;
         return {
           id: event.id,
-          name: event.name.text,
-          description: event.description.text,
+          name: eventName,
+          description: eventDesc,
           venue_id: event.venue_id,
           price: defaultPrice,
           url: event.url,
           image_url: imageUrl,
           start_datetime: event.start.local,
           end_datetime: event.end.local,
-          cateogry_id: event.category_id,
+          category_id: event.category_id,
         }
       });
     })
     .then((formattedEvents) => {
       //save to the DB
+      addEvents(monthEventsFormatted);
     })
     .then(()=> {
       getEvents.weekend()
