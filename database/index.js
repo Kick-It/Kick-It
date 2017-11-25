@@ -8,6 +8,7 @@ const bookshelf = require('bookshelf')(knex);
 const _ = require('lodash');
 const Promise = require('bluebird');
 const categoryList = require('../category_map.json');
+const moment = require('moment');
 
 
 knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
@@ -79,8 +80,7 @@ module.exports = {
   addEvents: (eventsList) => {
 
     Promise.resolve(eventsList.forEach( (event) => {
-      console.log('event: ', event);
-
+      // console.log('event: ', event);
       knex.raw(`INSERT INTO events (id, name, description, venue_id, price, url, image_url, start_datetime, end_datetime, category_id) VALUES ('${event.id}', ${event.name}, ${event.description}, '${event.venue_id}', '${event.price}', '${event.url}', '${event.image_url}', '${event.start_datetime}', '${event.end_datetime}', '${event.category_id}')`).catch( (err) => {
         console.log('Error occurred adding events: ', err);
       });
@@ -90,30 +90,20 @@ module.exports = {
   // search for events in table
   // categories will always be a list of category
   searchAllEvents: (date, categories, price) => {
-    Promise.resolve( () => {
-
-      knex.raw(`SELECT * FROM events WHERE `).catch( (err) => {
-        console.log('Error occurred adding events: ', err);
-      });
+    const dayStart = moment(date).startOf('day').format();
+    const dayEnd = moment(date).endOf('day').format();
+    const priceVal = price !== null ? `('${price}')` : `('paid', 'free')` ;
+    let categoryList = categories.join('\',\'')
+    categoryList = "'" + categoryList + "'"
+    let query = `SELECT e.* FROM events AS e JOIN categories AS c ON e.category_id = c.id WHERE e.price IN ${priceVal} AND e.start_datetime BETWEEN '${dayStart}' AND '${dayEnd}' AND c.shortname IN (${categoryList})`;
+    return new Promise( (resolve, reject) => {
+      resolve(knex.raw(query).catch( (err) => {
+          console.log('Error occurred finding events: ', err);
+        })
+      )
+    }).catch((err) => {
+      throw err;
     });
-    // Promise.resolve(Events.query( (qb) => {
-    //   qb.where('start_datetime', '=', date).andWhere('category_id', 'in', categories).andWhere('price', '=', price)
-    // }).fetchAll({
-    //   withRelated: [{
-    //     'venues': (qb) => {
-    //       qb.select('venues.id');
-    //       qb.columns('venues.name');
-    //     }
-    //   },
-    //   {
-    //     'categories': (qb) => {
-    //       qb.select('categories.id', 'categories.shortname');
-    //       qb.columns('categories.name');
-    //     }
-    //   }]
-    // }).catch( (err) => {
-    //   console.log('Error search events: ', err);
-    // }));
   }
 }
 
@@ -133,26 +123,5 @@ const addCategories = (categoryList) => {
       console.log('Error occurred adding categories: ', err);
     });
   });
-}
-
-
-//==========================================================================================
-//                    Venues Table
-//==========================================================================================
-
-class Venue extends bookshelf.Model {
-  get tableName() {
-    return 'venues'
-  }
-}
-
-
-const Venues = bookshelf.Collection.extend({
-  model: Venue
-})
-
-// add categories to table
-const addVenue = (venue) => {
-  Venues.forge().add(venue, [{merge: true}]);
 }
 
