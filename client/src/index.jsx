@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchBarContainer from './components/SearchBarContainer.jsx';
 import EventListContainer from './components/EventListContainer.jsx';
-import WeekendListContainer from './components/WeekendListContainer.jsx';
+//import WeekendListContainer from './components/WeekendListContainer.jsx';
 
 
 class App extends React.Component {
@@ -33,12 +33,10 @@ class App extends React.Component {
 				this.setState({
 					today: events,
 				});
-				//console.log('TODAYS events', this.state.today);
 			});
 	}
 
-	//create a function that is passed down to search Container
-	// makes a post request to the server with the data
+
 	runFilters(filters) {
 		console.log(filters);
 		fetch('/filter', {
@@ -80,5 +78,3 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
-
-// using fetch in the post request. data field (in ajax) is the body
