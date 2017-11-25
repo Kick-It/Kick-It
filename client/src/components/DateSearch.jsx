@@ -16,7 +16,7 @@ class DateSearch extends React.Component {
 		this.setState({
 			date: date
 		});
-		this.props.onChange('date', date.format('MM/DD/YYYY'));
+		this.props.onChange('date', moment(date).format());
 	}
 
 	render() {
