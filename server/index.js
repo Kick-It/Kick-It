@@ -15,7 +15,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 //        Database Functions     
 //======================================================================
 const addEvents = require('../database/index.js').addEvents;
-//const searchAllEvents = require('../database.index/js').searchAllEvents;
+const searchAllEvents = require('../database/index.js').searchAllEvents;
 
 // ======================================================================
 //   API month's events + venues -> Save to DB
@@ -50,7 +50,7 @@ app.get('/loadWeekend', function (req, res) {
     })
     .then((formattedEvents) => {
       //save to the DB
-      addEvents(monthEventsFormatted);
+      addEvents(formattedEvents);
     })
     .then(()=> {
       getEvents.weekend()
@@ -58,7 +58,7 @@ app.get('/loadWeekend', function (req, res) {
       res.json(data); 
       });
     })
-});
+}); 
 
 // ======================================================================
 //                    Query the DB on client filters
@@ -67,7 +67,12 @@ app.post('/filter', function(req,res) {
   let date = req.body.date;
   let categories = req.body.category;
   let price = req.body.price;
-  searchAllEvents(date, categories, price);
+
+  searchAllEvents(date, categories, price)
+    .then((data) => {
+    console.log('FIRST FILTERED EVENT ---->', data.rows[0], typeof data.rows[0]);
+    res.json(data.rows);
+  });
 });
 
 

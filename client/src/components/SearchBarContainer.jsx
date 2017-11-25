@@ -2,12 +2,13 @@ import React from 'react';
 import DateSearch from './DateSearch.jsx';
 import CategorySearch from './CategorySearch.jsx';
 import PriceSearch from './PriceSearch.jsx';
+import moment from 'moment';
 
 class SearchBarContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			date: null,
+			date: moment().format(),
 			category: [],
 			price: null
 		};

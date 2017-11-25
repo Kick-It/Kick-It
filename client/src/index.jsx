@@ -23,7 +23,6 @@ class App extends React.Component {
 				this.setState({
 					weekend: events,
 				});
-				console.log('WEEKEND EVENTS', this.state.weekend)
 			});
 		fetch('/loadToday')
 			.then((response) =>{
@@ -49,7 +48,16 @@ class App extends React.Component {
 			},
 			method: 'POST',
 			body: JSON.stringify(filters),
-		});
+		})
+		.then((data)=> {
+			console.log('clientside: ', data.body)
+			let events = JSON.parse(data.body);
+			console.log('FILTERED RETURN _____>', data, events);
+
+			this.setState({
+				today: events,
+			})
+		})
 	}
 
 	render() {
