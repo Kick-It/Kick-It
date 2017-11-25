@@ -9,7 +9,7 @@ class App extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			today: [],
+			featured: [],
 			weekend: [],
 		}
 	}
@@ -31,7 +31,7 @@ class App extends React.Component {
 			.then((data) =>{
 				let events = JSON.parse(data).events;
 				this.setState({
-					today: events,
+					featured: events,
 				});
 			});
 	}
@@ -56,6 +56,7 @@ class App extends React.Component {
 				today: events,
 			})
 		})
+
 	}
 
 	render() {
@@ -66,7 +67,7 @@ class App extends React.Component {
 				<div className="album text-muted">
 					<div className="container">
 						<EventListContainer 
-							todayEvents={this.state.today}
+							featuredEvents={this.state.featured}
 							weekendEvents={this.state.weekend.slice(0,20)} 
 						/>
 					</div>
