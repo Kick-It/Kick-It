@@ -25,6 +25,7 @@ const searchAllEvents = require('../database/index.js').searchAllEvents;
 
 
 app.get('/loadWeekend', function (req, res) {
+
   getEvents.month()
     .then((data)=> {    
       let parsed = JSON.parse(data);
@@ -54,11 +55,12 @@ app.get('/loadWeekend', function (req, res) {
     })
     .then(()=> {
       getEvents.weekend()
-    .then((data) =>{
-      res.json(data); 
-      });
-    })
-}); 
+        .then((data) =>{
+          res.json(data); 
+        })
+    });
+  }); 
+
 
 // ======================================================================
 //                    Query the DB on client filters
@@ -70,9 +72,9 @@ app.post('/filter', function(req,res) {
 
   searchAllEvents(date, categories, price)
     .then((data) => {
-    console.log('FIRST FILTERED EVENT ---->', data.rows[0], typeof data.rows[0]);
-    res.json(data.rows);
-  });
+      console.log(typeof data, data.length);
+      res.json(data);
+    })
 });
 
 
