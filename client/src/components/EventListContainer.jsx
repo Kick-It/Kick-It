@@ -1,7 +1,7 @@
 import React from 'react';
 import EventEntry from './EventEntry.jsx';
 import events from '../../../music-events.json';
-import WeekendListContainer from './WeekendListContainer.jsx';
+//import WeekendListContainer from './WeekendListContainer.jsx';
 import { Sidebar, Segment, Button, Menu, Image, Icon, Header } from 'semantic-ui-react'
 import WeekendEvent from './WeekendEvent.jsx';
 
@@ -13,7 +13,7 @@ class EventListContainer extends React.Component {
     	}
     	this.toggleVisibility = this.toggleVisibility.bind(this);
 	}
- 
+
 	toggleVisibility() {
 	   this.setState({ visible: !this.state.visible });
 	}
@@ -21,15 +21,15 @@ class EventListContainer extends React.Component {
 	render() {
 	    const { visible } = this.state
 
-		let todayRows = [];
-		this.props.todayEvents.forEach((event, index) => {
-			todayRows.push(<EventEntry event={event} key={index} />);
+		let todayRows = this.props.featuredEvents
+			.map((event, index) => {
+				return <EventEntry event={event} key={index} />;
 		});
 
-		let weekendRows = [];
-		this.props.weekendEvents.forEach((event,index) => {
-			weekendRows.push(<WeekendEvent event={event} key={index} />)
-		})
+		let weekendRows = this.props.weekendEvents
+			.map((event,index) => {
+				return <WeekendEvent event={event} key={index} />
+		});
 
 		return (
 		      <div>
