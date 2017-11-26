@@ -24,6 +24,7 @@ const searchAllEvents = require('../database/index.js').searchAllEvents;
 // ======================================================================
 
 
+
 app.get('/initialLoad', function (req, res) {
   let responseObj = {};
   
@@ -54,6 +55,7 @@ app.get('/initialLoad', function (req, res) {
     .then((formattedEvents) => {
       addEvents(formattedEvents);
     })
+
     //================================================================================
     //          REFACTORED TO USE DB QUERIES
     //================================================================================
@@ -82,6 +84,7 @@ app.get('/initialLoad', function (req, res) {
     //       res.json(data); 
     //     })
     // });
+
   }); 
 
 
@@ -95,6 +98,7 @@ app.post('/filter', function(req,res) {
 
   searchAllEvents(date, categories, price)
     .then((data) => {
+      console.log(data.rows, typeof data.rows);
       res.json(data);
     })
 });
