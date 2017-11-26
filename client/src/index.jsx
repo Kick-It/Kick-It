@@ -13,12 +13,13 @@ class App extends React.Component {
 		}
 	}
 	componentDidMount() {
-		fetch('/loadWeekend')
+		fetch('/initialLoad')
 			.then((response) =>{
 				return response.json();
 			})
 			.then((data) =>{
 				let events = JSON.parse(data).events;
+				console.log(data);
 				this.setState({
 					weekend: events,
 				});
@@ -33,6 +34,7 @@ class App extends React.Component {
 					featured: events,
 				});
 			});
+		// fetch('/load')
 	}
 
 
