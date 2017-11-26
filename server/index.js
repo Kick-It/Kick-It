@@ -26,7 +26,7 @@ const searchAllEvents = require('../database/index.js').searchAllEvents;
 
 app.get('/initialLoad', function (req, res) {
   let responseObj = {};
-  
+
   getEvents.month()
     .then((data)=> {    
       let parsed = JSON.parse(data);
