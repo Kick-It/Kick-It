@@ -17,7 +17,7 @@ const EventEntry = (props) => {
 			<a href={props.event.url}>
 				<img src={imageUrl}/>
 				<div className="card-body">
-					<time className="eventTime">{props.event.start.local}</time>
+					<time className="eventTime">{props.event.start_datetime}</time>
 					<div className="card-itle">{props.event.name.text}</div>
 					<div className="eventLocation"></div>
 					<div className="event">{props.event.is_free ? 'Free' : 'FEE'}</div>

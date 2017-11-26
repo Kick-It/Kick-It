@@ -20,7 +20,6 @@ const searchAllEvents = require('../database/index.js').searchAllEvents;
 // ======================================================================
 //   API month's events + venues -> Save to DB
 //   API weekend's events ->  Client
-
 // ======================================================================
 
 
@@ -72,7 +71,7 @@ app.post('/filter', function(req,res) {
 
   searchAllEvents(date, categories, price)
     .then((data) => {
-      console.log(typeof data, data.length);
+      console.log(data.rows, typeof data.rows);
       res.json(data);
     })
 
