@@ -50,7 +50,7 @@ class App extends React.Component {
 			return response.json();
 		})
 		.then((events)=> {
-			console.log('FILTERED RETURN _____>', Array.isArray(events.rows), events.rows);
+			console.log('FILTERED RETURN _____>', Array.isArray(events.rows), events.rows[0]);
 			this.setState({
 				featured: events.rows
 			})
@@ -77,3 +77,6 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+
+
