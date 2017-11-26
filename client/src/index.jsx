@@ -4,7 +4,6 @@ import SearchBarContainer from './components/SearchBarContainer.jsx';
 import EventListContainer from './components/EventListContainer.jsx';
 //import WeekendListContainer from './components/WeekendListContainer.jsx';
 
-
 class App extends React.Component {
 	constructor() {
 		super();
@@ -38,25 +37,24 @@ class App extends React.Component {
 
 
 	runFilters(filters) {
-		console.log(filters);
+		//console.log(filters);
 		fetch('/filter', {
 			headers: {
-				'Accept': 'application/json',
+				//'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
 			method: 'POST',
 			body: JSON.stringify(filters),
 		})
-		.then((data)=> {
-			console.log('clientside: ', data.body)
-			let events = JSON.parse(data.body);
-			console.log('FILTERED RETURN _____>', data, events);
-
+		.then((response)=> {
+			return response.json();
+		})
+		.then((events)=> {
+			console.log('FILTERED RETURN _____>', Array.isArray(events.rows), events.rows);
 			this.setState({
-				today: events,
+				featured: events.rows
 			})
 		})
-
 	}
 
 	render() {
