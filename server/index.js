@@ -57,31 +57,31 @@ app.get('/initialLoad', function (req, res) {
     //================================================================================
     //          REFACTORED TO USE DB QUERIES
     //================================================================================
-    .then(() =>{ //GET WEEKEND EVENTS FROM THE DB
-      getWeekendEventsDB()
-        .then((data) =>{
-          responseObj.weekend = data.rows;
-        });
-    })
-    .then(() =>{ //GET TODAYS EVENTS FROM THE DB
-      getTodayEventsDB()
-        .then((data) =>{
-          responseObj.today = data.rows
-        });
-    })
-    .then(()=>{
-      res.json(responseObj);
-    });
+    // .then(() =>{ //GET WEEKEND EVENTS FROM THE DB
+    //   getWeekendEventsDB()
+    //     .then((data) =>{
+    //       responseObj.weekend = data.rows;
+    //     });
+    // })
+    // .then(() =>{ //GET TODAYS EVENTS FROM THE DB
+    //   getTodayEventsDB()
+    //     .then((data) =>{
+    //       responseObj.today = data.rows
+    //     });
+    // })
+    // .then(()=>{
+    //   res.json(responseObj);
+    // });
 
     //================================================================================
     //          API CALL TO SET STATE ON LOAD
     //================================================================================
-    // .then(()=> {
-    //   getEvents.weekend()
-    //     .then((data) =>{
-    //       res.json(data); 
-    //     })
-    // });
+    .then(()=> {
+      getEvents.weekend()
+        .then((data) =>{
+          res.json(data); 
+        })
+    });
   }); 
 
 
@@ -104,11 +104,11 @@ app.post('/filter', function(req,res) {
 //                    Send today's data back to the client
 // ======================================================================
 app.get('/loadToday', function (req, res) {
-  // getEvents.today()
-  //   .then((data) =>{
-  //     res.json(data);
-  //   });
-  getTodayEventsDB
+  getEvents.today()
+    .then((data) =>{
+      res.json(data);
+    });
+  //getTodayEventsDB
 });
 // ======================================================================
 //                    load Venues to DB
