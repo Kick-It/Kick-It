@@ -5,6 +5,7 @@ const https = require("https");
 const getEvents = require('../lib/eventbrite.js');
 const Promise = require('bluebird');
 const PORT = process.env.PORT || 3000;
+const moment = require('moment');
 
 const app = express();
 
@@ -23,8 +24,10 @@ const searchAllEvents = require('../database/index.js').searchAllEvents;
 // ======================================================================
 
 
-app.get('/loadWeekend', function (req, res) {
 
+app.get('/initialLoad', function (req, res) {
+  let responseObj = {};
+  
   getEvents.month()
     .then((data)=> {    
       let parsed = JSON.parse(data);
@@ -45,19 +48,43 @@ app.get('/loadWeekend', function (req, res) {
           start_datetime: event.start.local,
           end_datetime: event.end.local,
           category_id: event.category_id,
+          day: moment(event.start.local).format('dddd'),
         }
       });
-    })
+    })  //ADD TO DB
     .then((formattedEvents) => {
-      //save to the DB
       addEvents(formattedEvents);
     })
-    .then(()=> {
-      getEvents.weekend()
+
+    //================================================================================
+    //          REFACTORED TO USE DB QUERIES
+    //================================================================================
+    .then(() =>{ //GET WEEKEND EVENTS FROM THE DB
+      getWeekendEventsDB()
         .then((data) =>{
-          res.json(data); 
-        })
+          responseObj.weekend = data.rows;
+        });
+    })
+    .then(() =>{ //GET TODAYS EVENTS FROM THE DB
+      getTodayEventsDB()
+        .then((data) =>{
+          responseObj.today = data.rows
+        });
+    })
+    .then(()=>{
+      res.json(responseObj);
     });
+
+    //================================================================================
+    //          API CALL TO SET STATE ON LOAD
+    //================================================================================
+    // .then(()=> {
+    //   getEvents.weekend()
+    //     .then((data) =>{
+    //       res.json(data); 
+    //     })
+    // });
+
   }); 
 
 
@@ -74,7 +101,6 @@ app.post('/filter', function(req,res) {
       console.log(data.rows, typeof data.rows);
       res.json(data);
     })
-
 });
 
 
@@ -82,10 +108,11 @@ app.post('/filter', function(req,res) {
 //                    Send today's data back to the client
 // ======================================================================
 app.get('/loadToday', function (req, res) {
-  getEvents.today()
-    .then((data) =>{
-      res.json(data);
-    });
+  // getEvents.today()
+  //   .then((data) =>{
+  //     res.json(data);
+  //   });
+  getTodayEventsDB
 });
 // ======================================================================
 //                    load Venues to DB
