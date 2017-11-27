@@ -32,7 +32,7 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
           }).then( () => {
             console.log('Inserting values to categories table..');
             Promise.resolve(addCategories(categoryList)).then( () => {
-              // knex.raw(`DROP TABLE IF EXISTS events;`).then( () => {
+              knex.raw(`DROP TABLE IF EXISTS events;`).then( () => {
                 console.log('Creating events table..');
                 knex.schema.createTable('events', (table) => {
                   table.string('id').primary();
@@ -49,7 +49,7 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
                   table.string('category_id');
                   table.foreign('category_id').references('categories.id');
                 }).catch((err) => { console.log(err) });
-              // })
+              })
             // })
           // })
         })
@@ -118,14 +118,14 @@ module.exports = {
   searchAllEvents: (date, categories, price) => {
     const dayStart = moment(date).startOf('day').format();
     const dayEnd = moment(date).endOf('day').format();
-    const priceVal = price !== null ? `('${price}')` : `('paid', 'free')` ;
+    const priceVal = price !== 'all' ? `('${price}')` : `('paid', 'free')` ;
     let query;
     if ( categories.length > 0 ) {   
       let categoryList = categories.join('\',\'')
       categoryList = "'" + categoryList + "'"
       query = `SELECT e.*, c.name AS category_name FROM events AS e JOIN categories AS c ON e.category_id = c.id WHERE e.price IN ${priceVal} AND e.start_datetime BETWEEN '${dayStart}' AND '${dayEnd}' AND c.shortname IN (${categoryList})`;
     } else {
-      query = `SELECT e.* FROM events AS e JOIN categories AS c ON e.category_id = c.id WHERE e.price IN ${priceVal} AND e.start_datetime BETWEEN '${dayStart}' AND '${dayEnd}'`;
+      query = `SELECT e.*, c.name AS category_name FROM events AS e JOIN categories AS c ON e.category_id = c.id WHERE e.price IN ${priceVal} AND e.start_datetime BETWEEN '${dayStart}' AND '${dayEnd}'`;
     }
     return new Promise( (resolve, reject) => {
       resolve(knex.raw(query).catch( (err) => {

@@ -12,6 +12,8 @@ const EventEntry = (props) => {
 		imageURL = dbURL.replace(/\$.{1}/i, '?');
 	}
 
+	
+
 	return (
 		<div className="card">
 			<a href={props.event.url}>		
@@ -20,7 +22,7 @@ const EventEntry = (props) => {
 					<time className="eventTime">{moment(props.event.start_datetime).format("MMM Do YY")}</time>
 					<div className="card-title">{props.event.name}</div>
 					<div className="eventLocation"></div>
-					<div className="event">{props.event.is_free ? 'Free' : '$'}</div>
+					<div className="event">{props.event.price === 'free' ? 'Free' : '$'}</div>
 					<div className="eventCategory">{props.event.category_name}</div>
 				</div>
 			</a>
