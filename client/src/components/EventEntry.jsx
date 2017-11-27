@@ -12,24 +12,16 @@ const EventEntry = (props) => {
 		imageURL = dbURL.replace(/\$.{1}/i, '?');
 	}
 
-	let getCategory = (id) => {
-		for (let category of categories.categories) {
-			if (category.id === id) {
-				return category.name;
-			}
-		}
-	};
-
 	return (
 		<div className="card">
 			<a href={props.event.url}>		
 				<img src={imageURL}/>
 				<div className="card-body">
 					<time className="eventTime">{moment(props.event.start_datetime).format("MMM Do YY")}</time>
-					<div className="card-title">{props.event.name.text||props.event.name}</div>
+					<div className="card-title">{props.event.name}</div>
 					<div className="eventLocation"></div>
 					<div className="event">{props.event.is_free ? 'Free' : '$'}</div>
-					<div className="eventCategory">{getCategory(props.event.category_id)}</div>
+					<div className="eventCategory">{props.event.category_name}</div>
 				</div>
 			</a>
 		</div>
