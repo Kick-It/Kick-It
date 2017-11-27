@@ -8,7 +8,7 @@ Promise.promisifyAll(server);
 //                   Server Tests
 // ======================================================================
 
-xdescribe('Server Handles Requests', function () {
+describe('Server Handles Requests', function () {
   this.timeout(15000);
   
   it('loads Homepage', (done) => {
@@ -28,7 +28,7 @@ xdescribe('Server Handles Requests', function () {
   it('gets this weekends events', (done) => {
     setTimeout(done, 15000);
     request(server)
-    .get('/loadWeekend')
+    .get('/initialLoad')
     .expect('Content-Type', /json/, done);
   });
   

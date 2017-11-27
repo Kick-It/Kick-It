@@ -125,6 +125,6 @@ app.get('/loadVenues', function (req, res) {
 //                    Run Server
 // ======================================================================
 
-app.listen(PORT, function() {
+module.exports = app.listen(PORT, function() {
   console.log(`listening on port ${PORT}!`);
 });
