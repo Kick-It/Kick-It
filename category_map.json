@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {
+    	"id": 103,
+      "name": "Music",
+      "shortname": "music"
+    },
+    {
+    	"id": 110,
+      "name": "Food & Drink",
+      "shortname": "food"
+    },
+    {
+    	"id": 113,
+      "name": "Community Events",
+      "shortname": "community"
+    },
+    {
+      "id": 116,
+      "name": "Community Events",
+      "shortname": "community"
+    },
+    {
+    	"id": 17001,
+      "name": "Dating",
+      "shortname": "dating"
+    },
+    {
+    	"id": 104,
+      "name": "Entertainment",
+      "shortname": "entertainment"
+    },
+    {
+      "id": 105,
+      "name": "Entertainment",
+      "shortname": "entertainment"
+    },
+    {
+    	"id": 102,
+      "name": "Science/Tech",
+      "shortname": "science"
+    },
+    {
+    	"id": 118,
+      "name": "Auto, Boat, Air",
+      "shortname": "autoBoatAir"
+    },
+    {
+    	"id": 108,
+      "name": "Active",
+      "shortname": "active"
+    },
+    {
+      "id": 109,
+      "name": "Active",
+      "shortname": "active"
+    }
+  ]
+}
