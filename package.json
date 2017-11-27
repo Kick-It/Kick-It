@@ -10,7 +10,7 @@
     "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress",
     "start": "nodemon server/index.js",
     "watch": "webpack -d --watch",
-    "test": "mocha --compilers js:babel-core/register clientTest.js"
+    "test": "mocha --compilers js:babel-core/register serverTest.js"
   },
   "repository": {
     "type": "git",

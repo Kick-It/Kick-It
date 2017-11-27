@@ -15,38 +15,6 @@ import  EventListContainer from './client/src/components/EventListContainer';
 //                   Client Tests
 // ======================================================================
 
-// let expect = require('chai').expect;
-//let React = require('react');
-let ReactTestUtils = require('react-dom/test-utils');
-
-// describe('App', function() {
-//   var {
-//     Simulate,
-//     renderIntoDocument,
-//     findRenderedDOMComponentWithClass,
-//     scryRenderedDOMComponentsWithClass
-//   } = ReactTestUtils;
-
-//   var app;
-
-//   beforeEach(function() {
-//     app = renderIntoDocument(
-//       <App />
-//     );
-//   });
-
-//   it('should be a stateful class component', function() {
-//     expect(React.Component.isPrototypeOf(App)).to.be.true;
-//   });
-
-// });
-
-// import jsdom from 'jsdom';
-
-// const doc = jsdom.jsdom('<!doctype html><html><body></body></html>');
-// global.document = doc;
-// global.window = doc.defaultView;
-
 describe('<EventListContainer />', () => {
 
   let props = events ;
