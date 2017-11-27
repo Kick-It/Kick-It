@@ -19,7 +19,6 @@ class App extends React.Component {
 			})
 			.then((data) =>{
 				let events = JSON.parse(data).events;
-				console.log(data);
 				this.setState({
 					weekend: events,
 				});
@@ -52,7 +51,8 @@ class App extends React.Component {
 			return response.json();
 		})
 		.then((events)=> {
-			console.log('FILTERED RETURN _____>', Array.isArray(events.rows), events.rows[0]);
+			console.log('FILTERED RETURN _____>', Array.isArray(events.rows), events.rows[1]);
+			console.log(events.rows.image_url);
 			this.setState({
 				featured: events.rows
 			})
@@ -63,6 +63,7 @@ class App extends React.Component {
 		return (
 			<div>
 				<h1>Kick It</h1>
+				<img src='https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F37619820%2F38889254454%2F1%2Foriginal.jpg?h=200&amp;w=450&amp;rect=3%2C69%2C1126%2C563&amp;s=a46e83d8544ecfa1924cecba6bd9d083'/>
 				<SearchBarContainer runFilters={this.runFilters.bind(this)}/>
 				<div className="album text-muted">
 					<div className="container">
@@ -80,5 +81,11 @@ class App extends React.Component {
 
 ReactDOM.render(<App />, document.getElementById('app'));
 
+//incorrect - DB
+//https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F37619820%2F38889254454%2F1%2Foriginal.jpg$2h=200&w=450&rect=3%2C69%2C1126%2C563&s=a46e83d8544ecfa1924cecba6bd9d083
 
-
+//correct - API 
+//https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F37619820%2F38889254454%2F1%2Foriginal.jpg?h=200&amp;w=450&amp;rect=3%2C69%2C1126%2C563&amp;s=a46e83d8544ecfa1924cecba6bd9d083
+//https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F37619820%2F38889254454%2F1%2Foriginal.jpg$2h=200&amp;w=450&amp;rect=3%2C69%2C1126%2C563&amp;s=a46e83d8544ecfa1924cecba6bd9d083	
+// sample from music line 67
+//https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F37426751%2F24250841862%2F1%2Foriginal.jpg?h=200&w=450&s=5187ea855ebde91de60a379af7fed198

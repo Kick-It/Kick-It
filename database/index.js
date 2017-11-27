@@ -42,7 +42,7 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
                   // table.foreign('venue_id').references('venues.id');
                   table.string('price');
                   table.string('url');
-                  table.string('image_url');
+                  table.text('image_url');
                   table.dateTime('start_datetime');
                   table.dateTime('end_datetime');
                   table.string('category_id');
