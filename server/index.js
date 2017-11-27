@@ -34,6 +34,7 @@ app.get('/initialLoad', function (req, res) {
       let parsed = JSON.parse(data);
       return parsed.events.map((event) => {
         let imageUrl = event.logo ? event.logo.url : 'https://cdn.evbstatic.com/s3-build/perm_001/f8c5fa/django/images/discovery/default_logos/4.png';
+        console.log(imageUrl);    
         let catID = event.subcategory_id === 17001 ? event.subcategory_id : event.category_id; 
         let defaultPrice = event.is_free ? 'free' : 'paid';
         let eventName = `$$${event.name.text}$$`;
