@@ -41,10 +41,11 @@ knex.raw('DROP DATABASE IF EXISTS kickit;').then( () => {
                   table.string('venue_id');
                   // table.foreign('venue_id').references('venues.id');
                   table.string('price');
-                  table.string('url');
-                  table.text('image_url');
+                  table.varchar('url');
+                  table.varchar('image_url');
                   table.dateTime('start_datetime');
                   table.dateTime('end_datetime');
+                  table.string('day');
                   table.string('category_id');
                   table.foreign('category_id').references('categories.id');
                 }).catch((err) => { console.log(err) });
@@ -78,13 +79,38 @@ module.exports = {
   // an event object should look like the following:
     // {name: '', description: '', venue_id: '', price: '', url: '', image_url: '', start_datetime: '', end_datetime: '', category_id: '' }
   addEvents: (eventsList) => {
+    return new Promise( (resolve, reject) => {
+      eventsList.forEach( (event) => {
+        Promise.resolve(knex.raw(`INSERT INTO events (id, name, description, venue_id, price, url, image_url, start_datetime, end_datetime, category_id) VALUES ('${event.id}', ${event.name}, ${event.description}, '${event.venue_id}', '${event.price}', '${event.url}', '${event.image_url}', '${event.start_datetime}', '${event.end_datetime}', '${event.category_id}')`)).then( (results) => {
+          resolve(results);
+        }).catch( (err) => {
+          console.log('Error occurred adding events: ', err);
+          reject(err);
+        });
+      })
+    });
+  },
 
-    Promise.resolve(eventsList.forEach( (event) => {
-      // console.log('event: ', event);
-      knex.raw(`INSERT INTO events (id, name, description, venue_id, price, url, image_url, start_datetime, end_datetime, category_id) VALUES ('${event.id}', ${event.name}, ${event.description}, '${event.venue_id}', '${event.price}', '${event.url}', '${event.image_url}', '${event.start_datetime}', '${event.end_datetime}', '${event.category_id}')`).catch( (err) => {
+  getTodaysEvents: () => {
+    const todayStart = moment().startOf('day').format();
+    const todayEnd = moment().endOf('day').format();
+    return new Promise( (resolve, reject) => {
+      Promise.resolve(knex.raw(`SELECT * from events e WHERE e.start_datetime BETWEEN '${todayStart}' AND '${todayEnd}'`)).then( (results) => {
+        resolve(results);
+      }).catch( (err) => {
         console.log('Error occurred adding events: ', err);
+        reject(err);
       });
-    }));
+    })
+  },
+
+  getWeekendEvents: () => {
+    console.log('day of week testing: ', moment().day(3))
+    // Promise.resolve( () => {
+    //   knex.raw(`SELECT * from events e WHERE e.start_datetime BETWEEN '${todayStart}' AND '${todayEnd}'`).catch( (err) => {
+    //     console.log('Error occurred adding events: ', err);
+    //   });
+    // })
   },
 
   // search for events in table
@@ -93,9 +119,14 @@ module.exports = {
     const dayStart = moment(date).startOf('day').format();
     const dayEnd = moment(date).endOf('day').format();
     const priceVal = price !== null ? `('${price}')` : `('paid', 'free')` ;
-    let categoryList = categories.join('\',\'')
-    categoryList = "'" + categoryList + "'"
-    let query = `SELECT e.* FROM events AS e JOIN categories AS c ON e.category_id = c.id WHERE e.price IN ${priceVal} AND e.start_datetime BETWEEN '${dayStart}' AND '${dayEnd}' AND c.shortname IN (${categoryList})`;
+    let query;
+    if ( categories.length > 0 ) {   
+      let categoryList = categories.join('\',\'')
+      categoryList = "'" + categoryList + "'"
+      query = `SELECT e.*, c.name AS category_name FROM events AS e JOIN categories AS c ON e.category_id = c.id WHERE e.price IN ${priceVal} AND e.start_datetime BETWEEN '${dayStart}' AND '${dayEnd}' AND c.shortname IN (${categoryList})`;
+    } else {
+      query = `SELECT e.* FROM events AS e JOIN categories AS c ON e.category_id = c.id WHERE e.price IN ${priceVal} AND e.start_datetime BETWEEN '${dayStart}' AND '${dayEnd}'`;
+    }
     return new Promise( (resolve, reject) => {
       resolve(knex.raw(query).catch( (err) => {
           console.log('Error occurred finding events: ', err);
