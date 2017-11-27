@@ -18,26 +18,23 @@ class App extends React.Component {
 				return response.json();
 			})
 			.then((data) =>{
-				//let events = JSON.parse(data.today);
-				this.setState({
-					featured: data.today,
-				});
-			})
-		.then(()=>{
-			fetch('/weekend')
-			.then((response) =>{
-				return response.json();
-			})
-			.then((data) =>{
 				let events = JSON.parse(data).events;
-				console.log(events);
 				this.setState({
 					weekend: events,
 				});
+			});
+		fetch('/loadToday')
+			.then((response) =>{
+				return response.json()
 			})
-		})
+			.then((data) =>{
+				let events = JSON.parse(data).events;
+				this.setState({
+					featured: events,
+				});
+			});
+		// fetch('/load')
 	}
-
 
 
 	runFilters(filters) {
@@ -51,10 +48,11 @@ class App extends React.Component {
 			body: JSON.stringify(filters),
 		})
 		.then((response)=> {
-
 			return response.json();
 		})
 		.then((events)=> {
+			console.log('FILTERED RETURN _____>', Array.isArray(events.rows), events.rows[1]);
+			console.log(events.rows.image_url);
 			this.setState({
 				featured: events.rows
 			})
@@ -71,7 +69,7 @@ class App extends React.Component {
 					<div className="container">
 						<EventListContainer 
 							featuredEvents={this.state.featured}
-							weekendEvents={this.state.weekend.slice(0,10)} 
+							weekendEvents={this.state.weekend.slice(0,20)} 
 						/>
 					</div>
 				</div>
