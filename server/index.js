@@ -6,33 +6,71 @@ const getEvents = require('../lib/eventbrite.js');
 const Promise = require('bluebird');
 const PORT = process.env.PORT || 3000;
 const moment = require('moment');
+const API_key = require('../config.js').API_key;
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
-app.use(cors());
 
 //======================================================================
 //        Database Functions     
 //======================================================================
-const addEvents = require('../database/index.js').addEvents;
-const searchAllEvents = require('../database/index.js').searchAllEvents;
+const db = require('../database/index.js');
 
 // ======================================================================
 //   API month's events + venues -> Save to DB
 //   API weekend's events ->  Client
 // ======================================================================
 
-
 app.get('/initialLoad', function (req, res) {
   let responseObj = {};
+  let holder = [];
+  let start = moment().format();
+  let end = moment().add(30,'day').format();
+  console.log(end);
+
+  let month_options = { 
+      method: 'GET',
+      url: 'https://www.eventbriteapi.com/v3/events/search',
+      qs: 
+      {
+          //'start_date.keyword': 'this_month',
+          'start_date.range_start': '2017-11-27T19:00:00',
+          'start_date.range_end': '2017-12-30T19:00:00',
+          'location.address' : 'san francisco',
+          'categories' : '103,110,113,116,17001,104,105,102,118,108,109',
+          'page' : 1,
+      },
+    headers: 
+    { authorization: API_key }, 
+  }
   
-  getEvents.month()
-    .then((data)=> {
-      // console.log('pre-parsed data: ', data.events)
-      let parsed = JSON.parse(data);
-      return parsed.events.map((event) => {
+  let getCalls = () =>{
+    return new Promise((resolve, reject) =>{ 
+      request(month_options, function(error, response, body){
+        let page = JSON.parse(body).pagination.page_number;
+        let parsedEvents = JSON.parse(body).events;
+        if (!error) {
+            holder = holder.concat(parsedEvents);
+          if (page < 5) {
+            month_options.qs.page +=1;
+            resolve(getCalls());
+          } else {
+            resolve(holder);
+          }
+        } else {
+          console.log(error);
+          reject(error)
+        }
+      });
+    })
+  }
+
+  getCalls()
+  .then((holder)=>{
+    console.log(holder.length);
+    return holder.map((event) => {
         let imageUrl = event.logo ? event.logo.url : 'https://cdn.evbstatic.com/s3-build/perm_001/f8c5fa/django/images/discovery/default_logos/4.png';
         let catID = event.subcategory_id === 17001 ? event.subcategory_id : event.category_id; 
         let defaultPrice = event.is_free ? 'free' : 'paid';
@@ -51,41 +89,29 @@ app.get('/initialLoad', function (req, res) {
           category_id: catID,
           day: moment(event.start.local).format('dddd'),
         }
-      });
-    })  //ADD TO DB
-    .then((formattedEvents) => {
-      addEvents(formattedEvents);
+      })
     })
-    //================================================================================
-    //          REFACTORED TO USE DB QUERIES
-    //================================================================================
-    // .then(() =>{ //GET WEEKEND EVENTS FROM THE DB
-    //   getWeekendEventsDB()
-    //     .then((data) =>{
-    //       responseObj.weekend = data.rows;
-    //     });
-    // })
-    // .then(() =>{ //GET TODAYS EVENTS FROM THE DB
-    //   getTodayEventsDB()
-    //     .then((data) =>{
-    //       responseObj.today = data.rows
-    //     });
-    // })
-    // .then(()=>{
-    //   res.json(responseObj);
-    // });
-
-    //================================================================================
-    //          API CALL TO SET STATE ON LOAD
-    //================================================================================
-    .then(()=> {
-      getEvents.weekend()
-        .then((data) =>{
-          res.json(data); 
+    .then((formattedEvents) => {
+      // ADD TO DB
+      db.addEvents(formattedEvents)
+        .then( (results) => { 
+      // //GET TODAYS EVENTS FROM THE DB
+          db.getTodaysEvents()
+            .then((data) =>{
+              responseObj.today = data.rows;
+              res.json(responseObj);
+            })
         })
-    });
-  }); 
-
+    })
+    .then(()=>{
+      app.get('/weekend', function(req, res) {
+      getEvents.weekend()
+      .then((data) =>{
+        res.json(data);
+      })
+    })
+  });
+});
 
 // ======================================================================
 //                    Query the DB on client filters
@@ -95,7 +121,7 @@ app.post('/filter', function(req,res) {
   let categories = req.body.category;
   let price = req.body.price;
 
-  searchAllEvents(date, categories, price)
+  db.searchAllEvents(date, categories, price)
     .then((data) => {
       res.json(data);
     })

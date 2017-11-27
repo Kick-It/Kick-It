@@ -10,7 +10,7 @@ class SearchBarContainer extends React.Component {
 		this.state = {
 			date: moment().format(),
 			category: [],
-			price: null
+			price: 'all'
 		};
 		this.onChange = this.onChange.bind(this);
 		this.onClick = this.onClick.bind(this);
