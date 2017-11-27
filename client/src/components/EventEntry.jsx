@@ -20,7 +20,6 @@ const EventEntry = (props) => {
 		}
 	};
 
-
 	return (
 		<div className="card">
 			<a href={props.event.url}>		
