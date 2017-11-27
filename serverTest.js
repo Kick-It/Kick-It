@@ -9,8 +9,11 @@ Promise.promisifyAll(server);
 // ======================================================================
 
 describe('Server Handles Requests', function () {
+
+  // increases time allowed for tests to run 
   this.timeout(15000);
   
+  // checks for homepage to have 'Kick It' as title
   it('loads Homepage', (done) => {
     request(server)
     .get('/')
@@ -18,6 +21,7 @@ describe('Server Handles Requests', function () {
     .expect(/Kick It/, done);
   });
 
+// checks if /loadToday will return data 
   it('gets todays events', (done) => {
     setTimeout(done, 15000);
     request(server)
@@ -25,6 +29,7 @@ describe('Server Handles Requests', function () {
     .expect('Content-Type', /json/, done);
   });
 
+// checks if /loadToday will return data 
   it('gets this weekends events', (done) => {
     setTimeout(done, 15000);
     request(server)
@@ -32,6 +37,7 @@ describe('Server Handles Requests', function () {
     .expect('Content-Type', /json/, done);
   });
   
+  // checks if /loadToday will return data 
   it('gets venue information', (done) => {
     setTimeout(done, 15000);
     request(server)
@@ -46,6 +52,7 @@ describe('Server Handles Requests', function () {
   //   .expect('Content-Type', /json/, done);
   // });
 
+// checks all other requests
   it('404 all other requests', (done) => {
     request(server)
       .get('/foo/bar')
